@@ -86,10 +86,12 @@ class LicenseManagerAgentOps:
         license_server_features_path = str(
             self._LICENSE_SERVER_FEATURES_CONFIG_PATH
         )
+        log_base_dir = str(self._LOG_DIR)
 
         ctxt = {
             "jwt_key": jwt_key,
             "service_addrs": service_addrs,
+            "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
             "license_server_features_path": license_server_features_path,
         }
