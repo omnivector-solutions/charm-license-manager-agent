@@ -68,7 +68,7 @@ class LicenseManagerAgentOps:
         systemd_service_template = Path(
             "./src/templates/license-manager-agent.service").read_text()
 
-        self._LICENSE_SERVER_AGENT_SYSTEMD_SERVICE_FILE.write_text(
+        self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.write_text(
             systemd_service_template
         )
         subprocess.call([
