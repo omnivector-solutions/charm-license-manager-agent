@@ -1,0 +1,18 @@
+name: license-manager-agent
+summary: License Manager Agent
+maintainers:
+    - Omnivector Solutions <info@omnivector.solutions>
+description: |
+    This charm provides the agent component of license-manager.
+tags:
+    - license-manager
+    - scania
+    - hpc
+
+series:
+    - centos7
+    - focal
+
+provides:
+  prolog-epilog:
+    interface: prolog-epilog

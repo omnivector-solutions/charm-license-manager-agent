@@ -1,0 +1,40 @@
+#!/bin/bash
+# This hook installs the centos dependencies needed to run the charm.
+
+set -e
+
+# Source the os-release information into the env.
+. /etc/os-release
+
+PYTHON38_VERSION="3.8.8"
+
+if ! [[ -f '.installed' ]]; then
+    # Determine if we are running in centos or ubuntu, if centos
+    # provision the needed prereqs.
+    if [[ $ID == 'centos' ]]; then 
+        if ! type -a python3; then
+	    # Determine the centos version and install prereqs accordingly
+            major=$(cat /etc/centos-release | tr -dc '0-9.'|cut -d \. -f1)
+            echo "Running centos$major, installing prereqs."
+            if [[ $major == "7" ]]; then
+	        yum -y groupinstall "Development Tools"
+                yum -y install openssl-devel bzip2-devel libffi-devel epel-release zlib-devel wget
+		# Install system python3
+                yum -y install python3
+		# Install Python 3.8 for license manager agent
+		wget https://www.python.org/ftp/python/${PYTHON38_VERSION}/Python-${PYTHON38_VERSION}.tgz -P /tmp/
+		tar xvf /tmp/Python-${PYTHON38_VERSION}.tgz -C /tmp/
+		cd /tmp/Python-${PYTHON38_VERSION}/
+		./configure --enable-optimizations
+		make altinstall
+            else
+                echo "Running unsuppored version of centos: $major"
+                exit -1
+            fi
+	fi
+    fi
+    touch .installed
+fi
+
+JUJU_DISPATCH_PATH="${JUJU_DISPATCH_PATH:-$0}" PYTHONPATH=lib:venv ./src/charm.py
+
