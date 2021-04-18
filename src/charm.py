@@ -85,7 +85,7 @@ class LicenseManagerAgentCharm(CharmBase):
         if self._stored.init_started:
             self._license_manager_agent_ops.restart_license_manager_agent()
 
-    def _on_remove(self):
+    def _on_remove(self, event):
         """Remove directories and files created by license-manager charm."""
         self._license_manager_agent_ops.stop_license_manager_agent()
         self._license_manager_agent_ops.remove_license_manager_agent()
