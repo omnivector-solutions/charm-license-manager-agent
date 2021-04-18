@@ -4,7 +4,7 @@ LicenseManagerAgentOps.
 import logging
 import subprocess
 from pathlib import Path
-from shutil import rmtree
+from shutil import copy2, rmtree
 
 
 logger = logging.getLogger()
@@ -63,6 +63,16 @@ class LicenseManagerAgentOps:
         ]
         subprocess.call(pip_install_cmd)
         logger.debug("license-manager-agent installed")
+
+        # Copy the prolog/epilog wrappers
+        copy2(
+            "./src/templates/slurmctld_prolog.sh",
+            "/srv/license-manager-agent-venv/bin/slurmctld_prolog"
+        )
+        copy2(
+            "./src/templates/slurmctld_epilog.sh",
+            "/srv/license-manager-agent-venv/bin/slurmctld_epilog"
+        )
 
         # Setup systemd
         systemd_service_template = Path(
