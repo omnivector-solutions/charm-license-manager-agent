@@ -42,22 +42,22 @@ class LicenseManagerAgentCharm(CharmBase):
             self.framework.observe(event, handler)
 
     def _on_install(self, event):
-        """Install license-manager agent."""
+        """Install license-manager-agent."""
         self._license_manager_agent_ops.install()
         self._stored.installed = True
         # Log and set status
         logger.debug("license-manager agent installed")
-        self.unit.status = ActiveStatus("lm-agent installed")
+        self.unit.status = ActiveStatus("license-manager-agent installed")
 
     def _on_start(self, event):
-        """Start the license-manager-service."""
+        """Start the license-manager-agent service."""
         if self._stored.installed:
             self._license_manager_agent_ops.start_license_manager_agent()
             self._stored.init_started = True
             self.unit.status = ActiveStatus("license-manager-agent started")
 
     def _on_config_changed(self, event):
-        """Configure license-manager agent with charm config."""
+        """Configure license-manager-agent with charm config."""
 
         # Get the backend-base-url from the charm config and check if it has changed.
         backend_base_url_from_config = self.model.config.get("backend-base-url")
@@ -86,7 +86,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self._license_manager_agent_ops.restart_license_manager_agent()
 
     def _on_remove(self, event):
-        """Remove directories and files created by license-manager charm."""
+        """Remove directories and files created by license-manager-agent charm."""
         self._license_manager_agent_ops.stop_license_manager_agent()
         self._license_manager_agent_ops.remove_license_manager_agent()
 
