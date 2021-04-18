@@ -1,4 +1,4 @@
-export LM2_AGENT_BACKEND_API_TOKEN={jwt_key}
-export LM2_AGENT_BACKEND_BASE_URL={license_manager_backend_base_url}
-export LM2_AGENT_SERVICE_ADDRS={service_addrs}
-export LM2_AGENT_LICENSE_SERVER_FEATURES_CONFIG_PATH={license_server_features_path}
+LM2_AGENT_BACKEND_API_TOKEN={jwt_key}
+LM2_AGENT_BACKEND_BASE_URL={license_manager_backend_base_url}
+LM2_AGENT_SERVICE_ADDRS={service_addrs}
+LM2_AGENT_LICENSE_SERVER_FEATURES_CONFIG_PATH={license_server_features_path}
