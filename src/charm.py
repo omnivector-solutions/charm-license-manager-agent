@@ -25,6 +25,7 @@ class LicenseManagerAgentCharm(CharmBase):
 
         self._stored.set_default(jwt_key=str())
         self._stored.set_default(service_addrs=str())
+        self._stored.set_default(init_started=False)
         self._stored.set_default(installed=False)
         self._stored.set_default(license_server_features=str())
         self._stored.set_default(backend_base_url=str())
