@@ -29,13 +29,21 @@ license-manager-agent:
   pypi-password: "<pypi-password>"
 ```
 
-### Deploy the charm.
+### Deploy the charm
 Using the built charm and the defined config, run the command to deploy the charm.
 ```bash
 juju deploy ./license-manager-agent.charm \
     --config ./license-manager-agent.yaml \
     --series centos7
 ```
+
+### Change configuration
+Modify charm configuration.
+```bash
+juju config license-manager-agent jwt-key=somenewvalue
+```
+Running the above command will tell the charm to reconfigure and restart license-manager-agent.
+
 
 #### Todo
 * checks for successfull installation of license-manager and its dependencies
