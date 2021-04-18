@@ -74,13 +74,13 @@ class LicenseManagerAgentOps:
             "/srv/license-manager-agent-venv/bin/slurmctld_epilog"
         )
 
-        # Setup systemd
-        systemd_service_template = Path(
-            "./src/templates/license-manager-agent.service").read_text()
-
-        self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.write_text(
-            systemd_service_template
+        # Setup systemd service file
+        copy2(
+            "./src/templates/license-manager-agent.service",
+            str(self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE)
         )
+
+        # Enable the systemd service
         subprocess.call([
             "systemctl",
             "enable",
