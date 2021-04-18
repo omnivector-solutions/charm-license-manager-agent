@@ -13,10 +13,10 @@ logger = logging.getLogger()
 class LicenseManagerAgentOps:
     """Track and perform license-manager-agent ops."""
 
-    _LICENSE_MANAGER_AGENT_PACKAGE_NAME = "license-manager[dev]"
+    _LICENSE_MANAGER_AGENT_PACKAGE_NAME = "license-manager[agent]"
     _LOG_DIR = Path("/var/log/license-manager-agent")
     _CONFIG_DIR = Path("/etc/license-manager-agent")
-    _ETC_DEFAULT = Path("/etc/default/license-manager")
+    _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
     _LICENSE_SERVER_FEATURES_CONFIG_PATH = _CONFIG_DIR / "license-server-features.yaml"
     _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
     _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE = Path(
