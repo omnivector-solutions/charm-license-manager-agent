@@ -19,3 +19,19 @@ options:
     default:
     description: |
       The license-manager backend url.
+  pypi-url:
+    type: string
+    default:
+    description: |
+      PYPI URL
+  pypi-username:
+    type: string
+    default:
+    description: |
+      PYPI USERNAME
+  pypi-password:
+    type: string
+    default:
+    description: |
+      PYPI PASSWORD
+ 
