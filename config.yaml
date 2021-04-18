@@ -1,0 +1,47 @@
+options:
+  jwt-key:
+    type: string
+    default:
+    description: |
+      JWT to access the backend with.
+  service-addrs:
+    type: string
+    default:
+    description: |
+      license server addresses to use e.g. flexlm:127.0.0.1:2345
+  license-server-features:
+    type: string
+    default:
+    description: |
+      The license-server-feature configuration.
+  license-manager-backend-base-url:
+    type: string
+    default:
+    description: |
+      The license-manager backend url.
+  log-level:
+    type: string
+    default: INFO
+    description: |
+      Acceptable values; DEBUG, INFO, ERROR, WARNING, CRITICAL.
+  stat-interval:
+    type: int
+    default: 300
+    description: |
+      Interval (in seconds) at which the reconcile cron will run.
+  pypi-url:
+    type: string
+    default:
+    description: |
+      PYPI URL
+  pypi-username:
+    type: string
+    default:
+    description: |
+      PYPI USERNAME
+  pypi-password:
+    type: string
+    default:
+    description: |
+      PYPI PASSWORD
+ 
