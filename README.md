@@ -4,13 +4,14 @@
 # Usage
 Follow the steps below to get started.
 
-1. Build the charm.
+### Build the charm
+
 Running the following command will produce a .charm file, `license-manager-agent.charm`
 ```bash
 charmcraft build
 ```
 
-2. Create the license-manager-agent charm config.
+### Create the license-manager-agent charm config
 
 `license-manager-agent.yaml`
 
@@ -28,7 +29,7 @@ license-manager-agent:
   pypi-password: "<pypi-password>"
 ```
 
-3. Deploy the charm.
+### Deploy the charm.
 Using the built charm and the defined config, run the command to deploy the charm.
 ```bash
 juju deploy ./license-manager-agent.charm \
@@ -36,7 +37,7 @@ juju deploy ./license-manager-agent.charm \
     --series centos7
 ```
 
-# Todo
+#### Todo
 * checks for successfull installation of license-manager and its dependencies
 * support prolog and epilog wrapper commands
 * add the log dir to the list of vars defined in etc default
