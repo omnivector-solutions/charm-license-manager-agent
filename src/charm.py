@@ -24,16 +24,19 @@ class LicenseManagerAgentCharm(CharmBase):
         super().__init__(*args)
 
         self._stored.set_default(jwt_key=str())
-        self._stored.set_default(server_addrs=str())
+        self._stored.set_default(service_addrs=str())
         self._stored.set_default(installed=False)
         self._stored.set_default(license_server_features=str())
+        self._stored.set_default(backend_base_url=str())
 
         self._prolog_epilog = PrologEpilog(self, 'prolog-epilog')
         self._license_manager_agent_ops = LicenseManagerAgentOps(self)
 
         event_handler_bindings = {
             self.on.install: self._on_install,
+            self.on.start: self._on_start,
             self.on.config_changed: self._on_config_changed,
+            self.on.remove: self._on_remove,
         }
         for event, handler in event_handler_bindings.items():
             self.framework.observe(event, handler)
@@ -46,8 +49,27 @@ class LicenseManagerAgentCharm(CharmBase):
         logger.debug("license-manager agent installed")
         self.unit.status = ActiveStatus("lm-agent installed")
 
+    def _on_start(self, event):
+        """Start the license-manager-service."""
+        if self._stored.installed:
+            self._license_manager_agent_ops.start_license_manager_agent()
+            self._stored.init_started = True
+            self.unit.status = ActiveStatus("license-manager-agent started")
+
     def _on_config_changed(self, event):
         """Configure license-manager agent with charm config."""
+
+        # Get the backend-base-url from the charm config and check if it has changed.
+        backend_base_url_from_config = self.model.config.get("backend-base-url")
+        if backend_base_url_from_config != self._stored.backend_base_url:
+            self._stored.backend_base_url = backend_base_url_from_config
+            self._license_manager_agent_ops.configure_etc_default()
+
+        # Get the service-addrs from the charm config and check if it has changed.
+        service_addrs_from_config = self.model.config.get("service-addrs")
+        if service_addrs_from_config != self._stored.service_addrs:
+            self._stored.service_addrs = service_addrs_from_config
+            self._license_manager_agent_ops.configure_etc_default()
 
         # Get the jwt-key from the charm config and check if it has changed.
         jwt_key_from_config = self.model.config.get("jwt-key")
@@ -56,8 +78,17 @@ class LicenseManagerAgentCharm(CharmBase):
             self._license_manager_agent_ops.configure_etc_default()
 
         license_server_features = self.model.config.get("license-server-features")
-        if self._stored.set_default(license_server_features != license_server_features:
+        if license_server_features != self._stored.license_server_features:
             self._license_manager_agent_ops.configure_license_server_features()
+
+        # Make sure the start hook has ran before we are restarting the service
+        if self._stored.init_started:
+            self._license_manager_agent_ops.restart_license_manager_agent()
+
+    def _on_remove(self):
+        """Remove directories and files created by license-manager charm."""
+        self._license_manager_agent_ops.stop_license_manager_agent()
+        self._license_manager_agent_ops.remove_license_manager_agent()
 
 
 if __name__ == "__main__":
