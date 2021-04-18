@@ -2,4 +2,4 @@
 
 source /etc/default/license-manager-agent
 
-slurmctld-epilog
+/srv/license-manager-agent-venv/bin/slurmctld-epilog

@@ -16,7 +16,7 @@ class PrologEpilog(Object):
         )
 
     def _on_relation_created(self, event):
-        prolog = "/srv/license-manager-agent-venv/bin/slurmctld-prolog"
-        epilog = "/srv/license-manager-agent-venv/bin/slurmctld-epilog"
+        prolog = "/srv/license-manager-agent-venv/bin/slurmctld_prolog"
+        epilog = "/srv/license-manager-agent-venv/bin/slurmctld_epilog"
         event.relation.data[self.model.unit]['epilog'] = epilog
         event.relation.data[self.model.unit]['prolog'] = prolog
