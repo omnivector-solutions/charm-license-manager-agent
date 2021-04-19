@@ -62,6 +62,9 @@ class LicenseManagerAgentOps:
         ]
         subprocess.call(upgrade_pip_cmd)
 
+        # Install PyYAML
+        subprocess.call(["./src/templates/install_pyyaml.sh"])
+
         # Install license-manager-agent
         url = pypi_url.split("://")[1]
         pip_install_cmd = [
