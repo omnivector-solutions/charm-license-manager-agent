@@ -134,33 +134,19 @@ class LicenseManagerAgentOps:
             self._charm.model.config.get("license-server-features")
         )
 
-    def stop_license_manager_agent(self):
+    def license_manager_agent_systemctl(self, operation: str):
         """
-        Stop the license-manager-agent systemd process.
+        Run license-manager-agent systemctl command.
         """
-        stop_cmd = [
+        cmd = [
             "systemctl",
-            "stop",
+            operation,
             self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
         ]
         try:
-            subprocess.call(stop_cmd)
+            subprocess.call(cmd)
         except subprocess.CalledProcessError as e:
-            logger.error(f"Error running {' '.join(stop_cmd)} - {e}")
-
-    def start_license_manager_agent(self):
-        """
-        Start the license-manager-agent.
-        """
-        start_cmd = [
-            "systemctl",
-            "start",
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
-        ]
-        try:
-            subprocess.call(start_cmd)
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Error running {' '.join(start_cmd)} - {e}")
+            logger.error(f"Error running {' '.join(cmd)} - {e}")
 
     def restart_license_manager_agent(self):
         """
@@ -170,9 +156,9 @@ class LicenseManagerAgentOps:
         temporarily..
         """
         # Stop license-manager-agent
-        self.stop_license_manager_agent()
+        self.license_manager_agent_systemctl("stop")
         # Start license-manager-agent
-        self.start_license_manager_agent()
+        self.start_license_manager_agent("start")
 
     def remove_license_manager_agent(self):
         """

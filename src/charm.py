@@ -53,7 +53,7 @@ class LicenseManagerAgentCharm(CharmBase):
     def _on_start(self, event):
         """Start the license-manager-agent service."""
         if self._stored.installed:
-            self._license_manager_agent_ops.start_license_manager_agent()
+            self._license_manager_agent_ops.license_manager_agent_systemctl("start")
             self._stored.init_started = True
             self.unit.status = ActiveStatus("license-manager-agent started")
 
@@ -88,7 +88,7 @@ class LicenseManagerAgentCharm(CharmBase):
 
     def _on_remove(self, event):
         """Remove directories and files created by license-manager-agent charm."""
-        self._license_manager_agent_ops.stop_license_manager_agent()
+        self._license_manager_agent_ops.license_manager_agent_systemctl("stop")
         self._license_manager_agent_ops.remove_license_manager_agent()
 
 
