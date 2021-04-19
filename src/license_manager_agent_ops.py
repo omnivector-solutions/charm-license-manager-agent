@@ -23,7 +23,7 @@ class LicenseManagerAgentOps:
         f"/etc/systemd/system/{_LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME}"
     )
     _LICENSE_MANAGER_AGENT_VENV_DIR = Path("/srv/license-manager-agent-venv")
-    _PIP_CMD = f"{_LICENSE_MANAGER_AGENT_VENV_DIR}/bin/pip3.8"
+    _PIP_CMD = f"{str(_LICENSE_MANAGER_AGENT_VENV_DIR)}/bin/pip3.8"
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
