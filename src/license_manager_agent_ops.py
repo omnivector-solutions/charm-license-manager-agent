@@ -23,6 +23,7 @@ class LicenseManagerAgentOps:
         f"/etc/systemd/system/{_LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME}"
     )
     _LICENSE_MANAGER_AGENT_VENV_DIR = Path("/srv/license-manager-agent-venv")
+    _PIP_CMD = f"{_LICENSE_MANAGER_AGENT_VENV_DIR}/bin/pip3.8"
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
@@ -52,10 +53,19 @@ class LicenseManagerAgentOps:
         subprocess.call(create_venv_cmd)
         logger.debug("license-manager-agent virtualenv created")
 
+        # Ensure we have the latest pip
+        upgrade_pip_cmd = [
+            self._PIP_CMD,
+            "install",
+            "--upgrade",
+            "pip",
+        ]
+        subprocess.call(upgrade_pip_cmd)
+
         # Install license-manager-agent
         url = pypi_url.split("://")[1]
         pip_install_cmd = [
-            "/srv/license-manager-agent-venv/bin/pip3.8",
+            self._PIP_CMD,
             "install",
             "-f",
             f"https://{pypi_username}:{pypi_password}@{url}",
