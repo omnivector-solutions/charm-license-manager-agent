@@ -166,7 +166,7 @@ class LicenseManagerAgentOps:
         # Stop license-manager-agent
         self.license_manager_agent_systemctl("stop")
         # Start license-manager-agent
-        self.start_license_manager_agent("start")
+        self.license_manager_agent_systemctl("start")
 
     def remove_license_manager_agent(self):
         """
@@ -174,7 +174,8 @@ class LicenseManagerAgentOps:
         """
         self.license_manager_agent_systemctl("stop")
         self.license_manager_agent_systemctl("disable")
-        self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.unlink()
+        if self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.exists():
+            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.unlink()
         subprocess.call([
             "systemctl",
             "daemon-reload"
