@@ -17,13 +17,18 @@ class LicenseManagerAgentOps:
     _LOG_DIR = Path("/var/log/license-manager-agent")
     _CONFIG_DIR = Path("/etc/license-manager-agent")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
-    _LICENSE_SERVER_FEATURES_CONFIG_PATH = _CONFIG_DIR / "license-server-features.yaml"
-    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
-    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE = Path(
-        f"/etc/systemd/system/{_LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME}"
+    _LICENSE_SERVER_FEATURES_CONFIG_PATH = _CONFIG_DIR.joinpath(
+        "license-server-features.yaml"
     )
+    _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
+    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME = \
+        "license-manager-agent.service"
+    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH.joinpath(
+        _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME)
+
     _LICENSE_MANAGER_AGENT_VENV_DIR = Path("/srv/license-manager-agent-venv")
-    _PIP_CMD = f"{str(_LICENSE_MANAGER_AGENT_VENV_DIR)}/bin/pip3.8"
+    _PIP_CMD = _LICENSE_MANAGER_AGENT_VENV_DIR.joinpath(
+        "bin", "pip3.8").as_posix()
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
@@ -167,8 +172,14 @@ class LicenseManagerAgentOps:
         """
         Remove the things we have created.
         """
-        self._ETC_DEFAULT.unlink()
+        self.license_manager_agent_systemctl("stop")
+        self.license_manager_agent_systemctl("disable")
         self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.unlink()
-        rmtree(str(self._CONFIG_DIR))
-        rmtree(str(self._LOG_DIR))
-        rmtree(str(self._LICENSE_MANAGER_AGENT_VENV_DIR))
+        subprocess.call([
+            "systemctl",
+            "daemon-reload"
+        ])
+        self._ETC_DEFAULT.unlink()
+        rmtree(self._CONFIG_DIR.as_posix())
+        rmtree(self._LOG_DIR.as_posix())
+        rmtree(self._LICENSE_MANAGER_AGENT_VENV_DIR.as_posix())
