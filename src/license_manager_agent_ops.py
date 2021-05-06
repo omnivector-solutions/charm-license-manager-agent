@@ -112,6 +112,9 @@ class LicenseManagerAgentOps:
         pypi_username = self._charm.model.config["pypi-username"]
         pypi_password = self._charm.model.config["pypi-password"]
 
+        # Stop license-manager-agent
+        self.license_manager_agent_systemctl("stop")
+
         url = pypi_url.split("://")[1]
         pip_install_cmd = [
             self._PIP_CMD,
@@ -123,6 +126,9 @@ class LicenseManagerAgentOps:
         ]
         subprocess.call(pip_install_cmd)
         logger.debug("license-manager-agent installed")
+
+        # Start license-manager-agent
+        self.license_manager_agent_systemctl("start")
 
     def configure_etc_default(self):
         """Get the needed config, render and write out the file."""
