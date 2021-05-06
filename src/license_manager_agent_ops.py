@@ -106,7 +106,7 @@ class LicenseManagerAgentOps:
             self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
         ])
 
-    def upgrade(self):
+    def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
         pypi_url = self._charm.model.config["pypi-url"]
         pypi_username = self._charm.model.config["pypi-username"]
@@ -119,7 +119,7 @@ class LicenseManagerAgentOps:
             "--upgrade",
             "-f",
             f"https://{pypi_username}:{pypi_password}@{url}",
-            self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
+            f"{self._LICENSE_MANAGER_AGENT_PACKAGE_NAME}=={version}",
         ]
         subprocess.call(pip_install_cmd)
         logger.debug("license-manager-agent installed")

@@ -93,7 +93,8 @@ class LicenseManagerAgentCharm(CharmBase):
         self._license_manager_agent_ops.remove_license_manager_agent()
 
     def _upgrade_to_latest(self, event):
-        self._license_manager_agent_ops.upgrade()
+        version = event.params["version"]
+        self._license_manager_agent_ops.upgrade(version)
 
 
 if __name__ == "__main__":

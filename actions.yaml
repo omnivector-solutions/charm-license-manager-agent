@@ -1,3 +1,9 @@
 upgrade-to-latest:
   description: >
     Upgrade license manager to the latest release.
+  params:
+    version:
+      type: string
+      description: Version of license-manager to upgrade to.
+  required:
+    - version
