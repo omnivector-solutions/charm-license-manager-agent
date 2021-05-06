@@ -38,7 +38,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self.on.start: self._on_start,
             self.on.config_changed: self._on_config_changed,
             self.on.remove: self._on_remove,
-            self.on._upgrade_to_latest_action: self._upgrade_to_latest,
+            self.on.upgrade_to_latest_action: self._upgrade_to_latest,
         }
         for event, handler in event_handler_bindings.items():
             self.framework.observe(event, handler)

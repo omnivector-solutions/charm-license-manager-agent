@@ -3,7 +3,6 @@ LicenseManagerAgentOps.
 """
 import logging
 import subprocess
-import shlex
 
 from pathlib import Path
 from shutil import copy2, rmtree
@@ -81,7 +80,6 @@ class LicenseManagerAgentOps:
             f"https://{pypi_username}:{pypi_password}@{url}",
             self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
         ]
-        pip_install_cmd = [shlex.quote(item) for item in pip_install_cmd]
         subprocess.call(pip_install_cmd)
         logger.debug("license-manager-agent installed")
 
@@ -123,7 +121,6 @@ class LicenseManagerAgentOps:
             f"https://{pypi_username}:{pypi_password}@{url}",
             self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
         ]
-        pip_install_cmd = [shlex.quote(item) for item in pip_install_cmd]
         subprocess.call(pip_install_cmd)
         logger.debug("license-manager-agent installed")
 
