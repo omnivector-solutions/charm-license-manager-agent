@@ -3,6 +3,8 @@ LicenseManagerAgentOps.
 """
 import logging
 import subprocess
+import shlex
+
 from pathlib import Path
 from shutil import copy2, rmtree
 
@@ -79,6 +81,7 @@ class LicenseManagerAgentOps:
             f"https://{pypi_username}:{pypi_password}@{url}",
             self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
         ]
+        pip_install_cmd = [shlex.quote(item) for item in pip_install_cmd]
         subprocess.call(pip_install_cmd)
         logger.debug("license-manager-agent installed")
 
@@ -104,6 +107,25 @@ class LicenseManagerAgentOps:
             "enable",
             self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
         ])
+
+    def upgrade(self):
+        """Upgrade license-manager-agent."""
+        pypi_url = self._charm.model.config["pypi-url"]
+        pypi_username = self._charm.model.config["pypi-username"]
+        pypi_password = self._charm.model.config["pypi-password"]
+
+        url = pypi_url.split("://")[1]
+        pip_install_cmd = [
+            self._PIP_CMD,
+            "install",
+            "--upgrade",
+            "-f",
+            f"https://{pypi_username}:{pypi_password}@{url}",
+            self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
+        ]
+        pip_install_cmd = [shlex.quote(item) for item in pip_install_cmd]
+        subprocess.call(pip_install_cmd)
+        logger.debug("license-manager-agent installed")
 
     def configure_etc_default(self):
         """Get the needed config, render and write out the file."""

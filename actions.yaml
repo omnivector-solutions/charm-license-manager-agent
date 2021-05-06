@@ -1,0 +1,3 @@
+upgrade-to-latest:
+  description: >
+    Upgrade license manager to the latest release.

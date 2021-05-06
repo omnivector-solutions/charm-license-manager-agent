@@ -38,6 +38,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self.on.start: self._on_start,
             self.on.config_changed: self._on_config_changed,
             self.on.remove: self._on_remove,
+            self.on._upgrade_to_latest_action: self._upgrade_to_latest,
         }
         for event, handler in event_handler_bindings.items():
             self.framework.observe(event, handler)
@@ -90,6 +91,9 @@ class LicenseManagerAgentCharm(CharmBase):
         """Remove directories and files created by license-manager-agent charm."""
         self._license_manager_agent_ops.license_manager_agent_systemctl("stop")
         self._license_manager_agent_ops.remove_license_manager_agent()
+
+    def _upgrade_to_latest(self, event):
+        self._license_manager_agent_ops.upgrade()
 
 
 if __name__ == "__main__":
