@@ -80,8 +80,11 @@ class LicenseManagerAgentOps:
             f"https://{pypi_username}:{pypi_password}@{url}",
             self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
         ]
-        subprocess.call(pip_install_cmd)
-        logger.debug("license-manager-agent installed")
+        out = subprocess.check_output(pip_install_cmd).decode().strip()
+        if "Successfully installed" in out:
+            logger.debug("license-manager-agent installed")
+        else:
+            logger.error("Trouble installing license-manager, please debug")
 
         # Copy the prolog/epilog wrappers
         copy2(
@@ -124,11 +127,15 @@ class LicenseManagerAgentOps:
             f"https://{pypi_username}:{pypi_password}@{url}",
             f"{self._LICENSE_MANAGER_AGENT_PACKAGE_NAME}=={version}",
         ]
-        subprocess.call(pip_install_cmd)
-        logger.debug("license-manager-agent installed")
 
-        # Start license-manager-agent
-        self.license_manager_agent_systemctl("start")
+        out = subprocess.check_output(pip_install_cmd).decode().strip()
+        if "Successfully installed" not in out:
+            logger.error("Trouble installing license-manager, please debug")
+        else:
+            logger.debug("license-manager-agent installed")
+            # Start license-manager-agent
+            self.license_manager_agent_systemctl("start")
+
 
     def configure_etc_default(self):
         """Get the needed config, render and write out the file."""
