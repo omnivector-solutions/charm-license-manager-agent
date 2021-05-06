@@ -54,7 +54,7 @@ class LicenseManagerAgentOps:
             "python3.8",
             "-m",
             "venv",
-            str(self._LICENSE_MANAGER_AGENT_VENV_DIR),
+            self._LICENSE_MANAGER_AGENT_VENV_DIR.as_posix(),
         ]
         subprocess.call(create_venv_cmd)
         logger.debug("license-manager-agent virtualenv created")
@@ -131,7 +131,7 @@ class LicenseManagerAgentOps:
 
         out = subprocess.check_output(pip_install_cmd).decode().strip()
         if "Successfully installed" not in out:
-            logger.error("Trouble installing license-manager, please debug")
+            logger.error("Trouble upgrading license-manager, please debug")
             raise Exception("License manager not installed.")
         else:
             logger.debug("license-manager-agent installed")
