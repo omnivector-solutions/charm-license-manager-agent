@@ -22,11 +22,8 @@ class LicenseManagerAgentOps:
         "license-server-features.yaml"
     )
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
-    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME = \
-        "license-manager-agent.service"
-    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH.joinpath(
-        _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME)
-
+    _SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
+    _SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_SERVICE_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
     _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
 
@@ -102,19 +99,19 @@ class LicenseManagerAgentOps:
         # Setup systemd service file
         copy2(
             "./src/templates/license-manager-agent.service",
-            str(self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE)
+            self._SYSTEMD_SERVICE_FILE.as_poxix()
         )
 
         # Enable the systemd service
         subprocess.call([
             "systemctl",
             "enable",
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
+            self._SYSTEMD_SERVICE_NAME,
         ])
 
     def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
-
+        
         # Stop license-manager-agent
         self.license_manager_agent_systemctl("stop")
 
@@ -142,6 +139,7 @@ class LicenseManagerAgentOps:
         jwt_key = charm_config.get("jwt-key")
         backend_base_url = charm_config.get("license-manager-backend-base-url")
         service_addrs = charm_config.get("service-addrs")
+
         log_level = charm_config.get("log-level")
         stat_interval = charm_config.get("stat-interval")
 
@@ -186,7 +184,7 @@ class LicenseManagerAgentOps:
         cmd = [
             "systemctl",
             operation,
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
+            self._SYSTEMD_SERVICE_NAME,
         ]
         try:
             subprocess.call(cmd)
@@ -211,8 +209,8 @@ class LicenseManagerAgentOps:
         """
         self.license_manager_agent_systemctl("stop")
         self.license_manager_agent_systemctl("disable")
-        if self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.exists():
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.unlink()
+        if self._SYSTEMD_SERVICE_FILE.exists():
+            self._SYSTEMD_SERVICE_FILE.unlink()
         subprocess.call([
             "systemctl",
             "daemon-reload"

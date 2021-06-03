@@ -11,23 +11,23 @@ if ! [[ -f '.installed' ]]; then
     # Determine if we are running in centos or ubuntu, if centos
     # provision the needed prereqs.
     if [[ $ID == 'centos' ]]; then 
-	# Determine the centos version and install prereqs accordingly
+        # Determine the centos version and install prereqs accordingly
         major=$(cat /etc/centos-release | tr -dc '0-9.'|cut -d \. -f1)
         if [[ $major == "7" ]]; then
-	        # Install yaml deps
-	        yum -y install libyaml-devel
+	          # Install yaml deps
+	          yum -y install libyaml-devel
             # Install python3 using yum (will install python3.6 on centos7)
             if ! type -a python3; then
                 echo "Running centos$major, installing prereqs."
-	        # Install system python3
+	              # Install system python3
                 yum -y install epel-release
                 yum -y install python3
-	        fi
-    	    # We need python3.8 to run license-manager-agent.
-	    # Install python3.8 from source.
+	          fi
+    	      # We need python3.8 to run license-manager-agent.
+	          # Install python3.8 from source.
             if ! type -a python3.8; then
                 ./src/templates/install_python.sh
-  	    fi
+  	        fi
         else
             echo "Running unsuppored version of centos: $major"
             exit -1
@@ -38,14 +38,14 @@ if ! [[ -f '.installed' ]]; then
         # exists on the system.
         # 
         if ! type -a python3.8
-	    then
+	      then
             ./src/templates/install_python.sh
         elif type -a python3.8
         then
-	        if ! type -a pip3; then
+	          if ! type -a pip3.8; then
                 apt install -y python3.8-venv
-	        fi
-	  fi
+	          fi
+	      fi
     fi
     touch .installed
 fi

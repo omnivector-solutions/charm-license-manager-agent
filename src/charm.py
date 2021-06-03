@@ -23,8 +23,10 @@ class LicenseManagerAgentCharm(CharmBase):
         """Initialize and observe."""
         super().__init__(*args)
 
+
         self._stored.set_default(
             installed=False,
+            init_started=False,
             license_server_features=str(),
         )
 
@@ -45,16 +47,17 @@ class LicenseManagerAgentCharm(CharmBase):
     def _on_install(self, event):
         """Install license-manager-agent."""
         self._license_manager_agent_ops.install()
-        self._stored.installed = True
         # Log and set status
         logger.debug("license-manager agent installed")
         self.unit.status = ActiveStatus("license-manager-agent installed")
+        self._stored.installed = True
 
     def _on_start(self, event):
         """Start the license-manager-agent service."""
         if self._stored.installed:
             self._license_manager_agent_ops.license_manager_agent_systemctl("start")
             self.unit.status = ActiveStatus("license-manager-agent started")
+            self._stored.init_started = True
 
     def _on_config_changed(self, event):
         """Configure license-manager-agent with charm config."""
@@ -68,7 +71,7 @@ class LicenseManagerAgentCharm(CharmBase):
         self._license_manager_agent_ops.configure_etc_default()
 
         # Make sure the start hook has ran before we are restarting the service
-        if self._stored.installed:
+        if self._stored.init_started:
             self._license_manager_agent_ops.restart_license_manager_agent()
 
     def _on_remove(self, event):
