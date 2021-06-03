@@ -99,7 +99,7 @@ class LicenseManagerAgentOps:
         # Setup systemd service file
         copy2(
             "./src/templates/license-manager-agent.service",
-            self._SYSTEMD_SERVICE_FILE.as_poxix()
+            self._SYSTEMD_SERVICE_FILE.as_posix()
         )
 
         # Enable the systemd service
