@@ -14,7 +14,7 @@ logger = logging.getLogger()
 class LicenseManagerAgentOps:
     """Track and perform license-manager-agent ops."""
 
-    _LICENSE_MANAGER_AGENT_PACKAGE_NAME = "license-manager[agent]"
+    _PACKAGE_NAME = "license-manager[agent]"
     _LOG_DIR = Path("/var/log/license-manager-agent")
     _CONFIG_DIR = Path("/etc/license-manager-agent")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
@@ -22,24 +22,25 @@ class LicenseManagerAgentOps:
         "license-server-features.yaml"
     )
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
-    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME = \
-        "license-manager-agent.service"
-    _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH.joinpath(
-        _LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME)
-
-    _LICENSE_MANAGER_AGENT_VENV_DIR = Path("/srv/license-manager-agent-venv")
-    _PIP_CMD = _LICENSE_MANAGER_AGENT_VENV_DIR.joinpath(
-        "bin", "pip3.8").as_posix()
+    _SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
+    _SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_SERVICE_NAME
+    _VENV_DIR = Path("/srv/license-manager-agent-venv")
+    _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
         self._charm = charm
 
-    def install(self):
-        """Install license-manager-agent and setup ops."""
-        pypi_url = self._charm.model.config["pypi-url"]
+    def _derived_pypi_url(self):
+        url = self._charm.model.config["pypi-url"]
+        url = url.split("://")[1]
         pypi_username = self._charm.model.config["pypi-username"]
         pypi_password = self._charm.model.config["pypi-password"]
+        return (f"https://{pypi_username}:{pypi_password}@"
+                f"{url}/simple/{self._PACKAGE_NAME[:15]}")
+
+    def install(self):
+        """Install license-manager-agent and setup ops."""
 
         # Create log dir
         if not self._LOG_DIR.exists():
@@ -54,7 +55,7 @@ class LicenseManagerAgentOps:
             "python3.8",
             "-m",
             "venv",
-            self._LICENSE_MANAGER_AGENT_VENV_DIR.as_posix(),
+            self._VENV_DIR.as_posix(),
         ]
         subprocess.call(create_venv_cmd)
         logger.debug("license-manager-agent virtualenv created")
@@ -71,14 +72,12 @@ class LicenseManagerAgentOps:
         # Install PyYAML
         subprocess.call(["./src/templates/install_pyyaml.sh"])
 
-        # Install license-manager-agent
-        url = pypi_url.split("://")[1]
         pip_install_cmd = [
             self._PIP_CMD,
             "install",
             "-f",
-            f"https://{pypi_username}:{pypi_password}@{url}",
-            self._LICENSE_MANAGER_AGENT_PACKAGE_NAME,
+            self._derived_pypi_url(),
+            self._PACKAGE_NAME,
         ]
         out = subprocess.check_output(pip_install_cmd).decode().strip()
         if "Successfully installed" not in out:
@@ -100,33 +99,29 @@ class LicenseManagerAgentOps:
         # Setup systemd service file
         copy2(
             "./src/templates/license-manager-agent.service",
-            str(self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE)
+            self._SYSTEMD_SERVICE_FILE.as_posix()
         )
 
         # Enable the systemd service
         subprocess.call([
             "systemctl",
             "enable",
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
+            self._SYSTEMD_SERVICE_NAME,
         ])
 
     def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
-        pypi_url = self._charm.model.config["pypi-url"]
-        pypi_username = self._charm.model.config["pypi-username"]
-        pypi_password = self._charm.model.config["pypi-password"]
-
+        
         # Stop license-manager-agent
         self.license_manager_agent_systemctl("stop")
 
-        url = pypi_url.split("://")[1]
         pip_install_cmd = [
             self._PIP_CMD,
             "install",
             "--upgrade",
             "-f",
-            f"https://{pypi_username}:{pypi_password}@{url}",
-            f"{self._LICENSE_MANAGER_AGENT_PACKAGE_NAME}=={version}",
+            self._derived_pypi_url(),
+            self._PACKAGE_NAME,
         ]
 
         out = subprocess.check_output(pip_install_cmd).decode().strip()
@@ -144,12 +139,19 @@ class LicenseManagerAgentOps:
         jwt_key = charm_config.get("jwt-key")
         backend_base_url = charm_config.get("license-manager-backend-base-url")
         service_addrs = charm_config.get("service-addrs")
+
+        log_level = charm_config.get("log-level")
+        stat_interval = charm_config.get("stat-interval")
+
         license_server_features_path = str(
             self._LICENSE_SERVER_FEATURES_CONFIG_PATH
         )
+
         log_base_dir = str(self._LOG_DIR)
 
         ctxt = {
+            "log_level": log_level,
+            "stat_interval": stat_interval,
             "jwt_key": jwt_key,
             "service_addrs": service_addrs,
             "log_base_dir": log_base_dir,
@@ -182,7 +184,7 @@ class LicenseManagerAgentOps:
         cmd = [
             "systemctl",
             operation,
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_NAME,
+            self._SYSTEMD_SERVICE_NAME,
         ]
         try:
             subprocess.call(cmd)
@@ -207,8 +209,8 @@ class LicenseManagerAgentOps:
         """
         self.license_manager_agent_systemctl("stop")
         self.license_manager_agent_systemctl("disable")
-        if self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.exists():
-            self._LICENSE_MANAGER_AGENT_SYSTEMD_SERVICE_FILE.unlink()
+        if self._SYSTEMD_SERVICE_FILE.exists():
+            self._SYSTEMD_SERVICE_FILE.unlink()
         subprocess.call([
             "systemctl",
             "daemon-reload"
@@ -216,4 +218,4 @@ class LicenseManagerAgentOps:
         self._ETC_DEFAULT.unlink()
         rmtree(self._CONFIG_DIR.as_posix())
         rmtree(self._LOG_DIR.as_posix())
-        rmtree(self._LICENSE_MANAGER_AGENT_VENV_DIR.as_posix())
+        rmtree(self._VENV_DIR.as_posix())

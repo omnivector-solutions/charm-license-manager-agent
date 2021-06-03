@@ -17,14 +17,15 @@ charmcraft build
 
 ```yaml
 license-manager-agent:
+  log-level: DEBUG
+  stat-interval: 60
   jwt-key: "your-jwt-key-to-access-the-licnese-manager-backend"
   service-addrs: "flexlm:127.0.0.1:2345"
   license-server-features: |
     - features:
       - TESTFEATURE
       license_server_type: flexlm
-  license-manager-backend-base-url: "https://license-manager-bdx-us-west-2.omnivector.solutions"
-  pypi-url: "https://pypicloud.omnivector.solutions/simple/license-manager"
+  pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
 ```

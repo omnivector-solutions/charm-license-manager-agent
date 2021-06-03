@@ -19,6 +19,16 @@ options:
     default:
     description: |
       The license-manager backend url.
+  log-level:
+    type: string
+    default: INFO
+    description: |
+      Acceptable values; DEBUG, INFO, ERROR, WARNING, CRITICAL.
+  stat-interval:
+    type: int
+    default: 300
+    description: |
+      Interval (in seconds) at which the reconcile cron will run.
   pypi-url:
     type: string
     default:
