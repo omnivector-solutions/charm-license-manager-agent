@@ -4,16 +4,6 @@ options:
     default:
     description: |
       JWT to access the backend with.
-  service-addrs:
-    type: string
-    default:
-    description: |
-      license server addresses to use e.g. flexlm:127.0.0.1:2345
-  license-server-features:
-    type: string
-    default:
-    description: |
-      The license-server-feature configuration.
   license-manager-backend-base-url:
     type: string
     default:
@@ -44,4 +34,9 @@ options:
     default:
     description: |
       PYPI PASSWORD
- 
+  domain:
+    type: string
+    default:
+    description: |
+      configuration domain
+

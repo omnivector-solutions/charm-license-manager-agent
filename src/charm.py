@@ -27,7 +27,6 @@ class LicenseManagerAgentCharm(CharmBase):
         self._stored.set_default(
             installed=False,
             init_started=False,
-            license_server_features=str(),
         )
 
         self._prolog_epilog = PrologEpilog(self, 'prolog-epilog')
@@ -61,12 +60,6 @@ class LicenseManagerAgentCharm(CharmBase):
 
     def _on_config_changed(self, event):
         """Configure license-manager-agent with charm config."""
-
-        # Check if the license-server-features config has changed.[]
-        license_server_features = self.model.config.get("license-server-features")
-        if license_server_features != self._stored.license_server_features:
-            self._license_manager_agent_ops.configure_license_server_features()
-
         # Write out the /etc/default/license-manage-agent config
         self._license_manager_agent_ops.configure_etc_default()
 
