@@ -14,6 +14,7 @@ logger = logging.getLogger()
 class LicenseManagerAgentOps:
     """Track and perform license-manager-agent ops."""
 
+    _PYTHON_BIN = Path("/usr/local/bin/python3.8")
     _PACKAGE_NAME = "license-manager[agent]"
     _LOG_DIR = Path("/var/log/license-manager-agent")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
@@ -44,7 +45,7 @@ class LicenseManagerAgentOps:
 
         # Create the virtualenv
         create_venv_cmd = [
-            "python3.8",
+            self._PYTHON_BIN.as_posix(),
             "-m",
             "venv",
             self._VENV_DIR.as_posix(),
@@ -110,7 +111,7 @@ class LicenseManagerAgentOps:
             "--upgrade",
             "-f",
             self._derived_pypi_url(),
-            self._PACKAGE_NAME,
+            f"{self._PACKAGE_NAME}={version}",
         ]
 
         out = subprocess.check_output(pip_install_cmd).decode().strip()
