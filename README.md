@@ -34,7 +34,7 @@ license-manager-agent:
 ### Deploy the charm
 Using the built charm and the defined config, run the command to deploy the charm.
 ```bash
-juju deploy ./license-manager-agent.charm \
+juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
     --config ./license-manager-agent.yaml \
     --series centos7
 ```
