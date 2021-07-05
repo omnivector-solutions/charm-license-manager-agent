@@ -6,9 +6,10 @@ Follow the steps below to get started.
 
 ### Build the charm
 
-Running the following command will produce a .charm file, `license-manager-agent.charm`
+Running the following command will produce a `.charm` file,
+`license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm`:
 ```bash
-charmcraft build
+$ charmcraft pack
 ```
 
 ### Create the license-manager-agent charm config
