@@ -24,7 +24,6 @@ license-manager-agent:
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
-  domain: "<domain>"
 ```
 
 ### Deploy the charm

@@ -140,7 +140,6 @@ class LicenseManagerAgentOps:
             "jwt_key": jwt_key,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
-            "domain": domain
         }
 
         etc_default_template = Path(
