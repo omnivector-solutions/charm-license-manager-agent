@@ -33,10 +33,5 @@ options:
     type: string
     default:
     description: |
-      PYPI PASSWORD
-  domain:
-    type: string
-    default:
-    description: |
-      configuration domain
+      PYPI PASSWORD in plain text
 
