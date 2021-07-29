@@ -31,7 +31,7 @@ then
             # Install python3.8 from source.
             if [ ! -e /usr/bin/python3.8 ]
             then
-                yum -y install wget zlib-devel openssl-devel
+		yum install -y gcc zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel
                 yum groupinstall "Development tools" -y
                 /bin/bash ./src/templates/install_python.sh
             fi
@@ -46,6 +46,10 @@ then
         #
         if [ ! -e /usr/bin/python3.8 ]
         then
+	    apt install -y make build-essential libssl-dev zlib1g-dev \
+	    libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+	    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
             /bin/bash ./src/templates/install_python.sh
         else
             if [ ! -e /usr/bin/pip3 ]
