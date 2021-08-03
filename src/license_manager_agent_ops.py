@@ -14,7 +14,7 @@ logger = logging.getLogger()
 class LicenseManagerAgentOps:
     """Track and perform license-manager-agent ops."""
 
-    _PYTHON_BIN = Path("/usr/local/bin/python3.8")
+    _PYTHON_BIN = Path("/usr/bin/python3.8")
     _PACKAGE_NAME = "license-manager[agent]"
     _LOG_DIR = Path("/var/log/license-manager-agent")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
