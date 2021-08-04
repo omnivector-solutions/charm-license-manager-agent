@@ -21,11 +21,6 @@ license-manager-agent:
   log-level: DEBUG
   stat-interval: 60
   jwt-key: "your-jwt-key-to-access-the-licnese-manager-backend"
-  service-addrs: "flexlm:127.0.0.1:2345"
-  license-server-features: |
-    - features:
-      - TESTFEATURE
-      license_server_type: flexlm
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
@@ -46,8 +41,3 @@ juju config license-manager-agent jwt-key=somenewvalue
 ```
 Running the above command will tell the charm to reconfigure and restart license-manager-agent.
 
-
-#### Todo
-* checks for successfull installation of license-manager and its dependencies
-* support prolog and epilog wrapper commands
-* add the log dir to the list of vars defined in etc default

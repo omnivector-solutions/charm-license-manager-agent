@@ -14,13 +14,10 @@ logger = logging.getLogger()
 class LicenseManagerAgentOps:
     """Track and perform license-manager-agent ops."""
 
+    _PYTHON_BIN = Path("/usr/bin/python3.8")
     _PACKAGE_NAME = "license-manager[agent]"
     _LOG_DIR = Path("/var/log/license-manager-agent")
-    _CONFIG_DIR = Path("/etc/license-manager-agent")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
-    _LICENSE_SERVER_FEATURES_CONFIG_PATH = _CONFIG_DIR.joinpath(
-        "license-server-features.yaml"
-    )
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
     _SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
     _SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_SERVICE_NAME
@@ -46,13 +43,9 @@ class LicenseManagerAgentOps:
         if not self._LOG_DIR.exists():
             self._LOG_DIR.mkdir(parents=True)
 
-        # Create config dir
-        if not self._CONFIG_DIR.exists():
-            self._CONFIG_DIR.mkdir(parents=True)
-
         # Create the virtualenv
         create_venv_cmd = [
-            "python3.8",
+            self._PYTHON_BIN.as_posix(),
             "-m",
             "venv",
             self._VENV_DIR.as_posix(),
@@ -68,9 +61,6 @@ class LicenseManagerAgentOps:
             "pip",
         ]
         subprocess.call(upgrade_pip_cmd)
-
-        # Install PyYAML
-        subprocess.call(["./src/templates/install_pyyaml.sh"])
 
         pip_install_cmd = [
             self._PIP_CMD,
@@ -121,7 +111,7 @@ class LicenseManagerAgentOps:
             "--upgrade",
             "-f",
             self._derived_pypi_url(),
-            self._PACKAGE_NAME,
+            f"{self._PACKAGE_NAME}={version}",
         ]
 
         out = subprocess.check_output(pip_install_cmd).decode().strip()
@@ -138,14 +128,9 @@ class LicenseManagerAgentOps:
         charm_config = self._charm.model.config
         jwt_key = charm_config.get("jwt-key")
         backend_base_url = charm_config.get("license-manager-backend-base-url")
-        service_addrs = charm_config.get("service-addrs")
 
         log_level = charm_config.get("log-level")
         stat_interval = charm_config.get("stat-interval")
-
-        license_server_features_path = str(
-            self._LICENSE_SERVER_FEATURES_CONFIG_PATH
-        )
 
         log_base_dir = str(self._LOG_DIR)
 
@@ -153,10 +138,8 @@ class LicenseManagerAgentOps:
             "log_level": log_level,
             "stat_interval": stat_interval,
             "jwt_key": jwt_key,
-            "service_addrs": service_addrs,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
-            "license_server_features_path": license_server_features_path,
         }
 
         etc_default_template = Path(
@@ -168,15 +151,7 @@ class LicenseManagerAgentOps:
             self._ETC_DEFAULT.unlink()
 
         self._ETC_DEFAULT.write_text(rendered_template)
-
-    def configure_license_server_features(self):
-        """Write out the license-server-features.yaml"""
-        if self._LICENSE_SERVER_FEATURES_CONFIG_PATH.exists():
-            self._LICENSE_SERVER_FEATURES_CONFIG_PATH.unlink()
-        self._LICENSE_SERVER_FEATURES_CONFIG_PATH.write_text(
-            self._charm.model.config.get("license-server-features")
-        )
-
+    
     def license_manager_agent_systemctl(self, operation: str):
         """
         Run license-manager-agent systemctl command.
@@ -216,6 +191,5 @@ class LicenseManagerAgentOps:
             "daemon-reload"
         ])
         self._ETC_DEFAULT.unlink()
-        rmtree(self._CONFIG_DIR.as_posix())
         rmtree(self._LOG_DIR.as_posix())
         rmtree(self._VENV_DIR.as_posix())
