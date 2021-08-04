@@ -8,7 +8,7 @@ mkdir ./tmp/
 wget https://www.python.org/ftp/python/${PYTHON38_VERSION}/Python-${PYTHON38_VERSION}.tgz -P ./tmp/
 tar xvf ./tmp/Python-${PYTHON38_VERSION}.tgz -C ./tmp/
 cd ./tmp/Python-${PYTHON38_VERSION}/
-./configure --enable-optimizations
+./configure --enable-optimizations --prefix=/usr
 make altinstall
 cd ../../
 rm -rf tmp/

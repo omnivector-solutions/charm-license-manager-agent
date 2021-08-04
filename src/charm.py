@@ -45,7 +45,13 @@ class LicenseManagerAgentCharm(CharmBase):
 
     def _on_install(self, event):
         """Install license-manager-agent."""
-        self._license_manager_agent_ops.install()
+        try:
+            self._license_manager_agent_ops.install()
+        except:
+            self.unit.status = BlockedStatus("Installation error")
+            event.defer()
+            return
+
         # Log and set status
         logger.debug("license-manager agent installed")
         self.unit.status = ActiveStatus("license-manager-agent installed")
