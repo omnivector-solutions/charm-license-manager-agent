@@ -114,7 +114,7 @@ class LicenseManagerAgentOps:
             "--upgrade",
             "-f",
             self._derived_pypi_url(),
-            f"{self._PACKAGE_NAME}={version}",
+            f"{self._PACKAGE_NAME}=={version}",
         ]
 
         out = subprocess.check_output(pip_install_cmd).decode().strip()
