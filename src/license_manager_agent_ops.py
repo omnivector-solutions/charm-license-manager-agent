@@ -3,9 +3,10 @@ LicenseManagerAgentOps.
 """
 import logging
 import subprocess
-
 from pathlib import Path
 from shutil import copy2, rmtree
+
+from jinja2 import Environment, FileSystemLoader
 
 
 logger = logging.getLogger()
@@ -69,12 +70,14 @@ class LicenseManagerAgentOps:
             self._derived_pypi_url(),
             self._PACKAGE_NAME,
         ]
-        out = subprocess.check_output(pip_install_cmd).decode().strip()
-        if "Successfully installed" not in out:
+        logger.debug(f"## Running: {pip_install_cmd}")
+        try:
+            out = subprocess.check_output(pip_install_cmd).decode().strip()
+            logger.debug("license-manager-agent installed")
+            logger.debug(f"## pip install output: {out}")
+        except:
             logger.error("Trouble installing license-manager, please debug")
             raise Exception("License manager not installed.")
-        else:
-            logger.debug("license-manager-agent installed")
 
         # Copy the prolog/epilog wrappers
         copy2(
@@ -101,7 +104,7 @@ class LicenseManagerAgentOps:
 
     def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
-        
+
         # Stop license-manager-agent
         self.license_manager_agent_systemctl("stop")
 
@@ -142,16 +145,18 @@ class LicenseManagerAgentOps:
             "license_manager_backend_base_url": backend_base_url,
         }
 
-        etc_default_template = Path(
-            "./src/templates/license-manager.defaults.template").read_text()
+        template_dir = Path("./src/templates/")
+        template_file = "license-manager.defaults.template"
+        environment = Environment(loader=FileSystemLoader(template_dir))
+        template = environment.get_template(template_file)
 
-        rendered_template = etc_default_template.format(**ctxt)
+        rendered_template = template.render(ctxt)
 
         if self._ETC_DEFAULT.exists():
             self._ETC_DEFAULT.unlink()
 
         self._ETC_DEFAULT.write_text(rendered_template)
-    
+
     def license_manager_agent_systemctl(self, operation: str):
         """
         Run license-manager-agent systemctl command.
