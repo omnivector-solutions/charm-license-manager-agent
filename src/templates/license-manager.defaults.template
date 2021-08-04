@@ -1,7 +1,7 @@
 {% if jwt_key %}
-LM2_AGENT_BACKEND_API_TOKEN={jwt_key}
+LM2_AGENT_BACKEND_API_TOKEN={{ jwt_key }}
 {% endif %}
-LM2_AGENT_BACKEND_BASE_URL={license_manager_backend_base_url}
-LM2_AGENT_LOG_BASE_DIR={log_base_dir}
-LM2_AGENT_LOG_LEVEL={log_level}
-LM2_AGENT_STAT_INTERVAL={stat_interval}
+LM2_AGENT_BACKEND_BASE_URL={{ license_manager_backend_base_url }}
+LM2_AGENT_LOG_BASE_DIR={{ log_base_dir }}
+LM2_AGENT_LOG_LEVEL={{ log_level }}
+LM2_AGENT_STAT_INTERVAL={{ stat_interval }}
