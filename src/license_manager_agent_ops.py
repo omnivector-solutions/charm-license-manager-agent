@@ -136,8 +136,8 @@ class LicenseManagerAgentOps:
 
         ctxt = {
             "log_level": log_level,
-            "stat_interval": stat_interval,
             "jwt_key": jwt_key,
+            "stat_interval": stat_interval,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
         }
