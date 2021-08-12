@@ -16,7 +16,7 @@ class LicenseManagerAgentOps:
     """Track and perform license-manager-agent ops."""
 
     _PYTHON_BIN = Path("/usr/bin/python3.8")
-    _PACKAGE_NAME = "license-manager[agent]"
+    _PACKAGE_NAME = "license-manager-agent"
     _LOG_DIR = Path("/var/log/license-manager-agent")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
@@ -35,7 +35,7 @@ class LicenseManagerAgentOps:
         pypi_username = self._charm.model.config["pypi-username"]
         pypi_password = self._charm.model.config["pypi-password"]
         return (f"https://{pypi_username}:{pypi_password}@"
-                f"{url}/simple/{self._PACKAGE_NAME[:15]}")
+                f"{url}/simple/{self._PACKAGE_NAME}")
 
     def install(self):
         """Install license-manager-agent and setup ops."""
