@@ -8,7 +8,7 @@ User=root
 Group=root
 WorkingDirectory=/srv/license-manager-agent-venv
 EnvironmentFile=-/etc/default/license-manager-agent
-ExecStart=/srv/license-manager-agent-venv/bin/uvicorn licensemanager2.agent.main:app --port 8010
+ExecStart=/srv/license-manager-agent-venv/bin/uvicorn lm_agent.main:app --port 8010
 
 [Install]
 Alias=license-manager-agent.service
