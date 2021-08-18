@@ -23,7 +23,7 @@ options:
     type: string
     default:
     description: |
-      PYPI URL.
+      PYPI URL with the protocol, e.g. `https://pypicloud.example.com`.
   pypi-username:
     type: string
     default:
