@@ -34,7 +34,7 @@ options:
     default:
     description: |
       PYPI PASSWORD in plain text.
-  sentry_dsn:
+  sentry-dsn:
     type: string
     default:
     description: |
