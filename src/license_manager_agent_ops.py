@@ -134,10 +134,12 @@ class LicenseManagerAgentOps:
 
         log_level = charm_config.get("log-level")
         stat_interval = charm_config.get("stat-interval")
+        sentry_dsn = charm_config.get("sentry-dsn")
 
         log_base_dir = str(self._LOG_DIR)
 
         ctxt = {
+            "sentry_dsn": sentry_dsn,
             "log_level": log_level,
             "jwt_key": jwt_key,
             "stat_interval": stat_interval,
