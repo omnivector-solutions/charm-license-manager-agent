@@ -24,6 +24,7 @@ license-manager-agent:
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
+  sentry-dsn: "https://sentrydsn.com:123"
 ```
 
 ### Deploy the charm
