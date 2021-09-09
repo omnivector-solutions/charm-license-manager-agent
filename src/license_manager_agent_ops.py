@@ -24,6 +24,8 @@ class LicenseManagerAgentOps:
     _SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_SERVICE_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
     _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
+    _SLURM_USER = "slurm"
+    _SLURM_GROUP = "slurm"
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
@@ -43,6 +45,7 @@ class LicenseManagerAgentOps:
         # Create log dir
         if not self._LOG_DIR.exists():
             self._LOG_DIR.mkdir(parents=True)
+        shutil.chown(self._LOG_DIR, self._SLURM_USER, self._SLURM_GROUP)
 
         # Create the virtualenv
         create_venv_cmd = [
