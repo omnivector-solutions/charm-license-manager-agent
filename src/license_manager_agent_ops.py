@@ -4,7 +4,7 @@ LicenseManagerAgentOps.
 import logging
 import subprocess
 from pathlib import Path
-from shutil import copy2, rmtree
+from shutil import copy2, rmtree, chown
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -45,7 +45,7 @@ class LicenseManagerAgentOps:
         # Create log dir
         if not self._LOG_DIR.exists():
             self._LOG_DIR.mkdir(parents=True)
-        shutil.chown(self._LOG_DIR, self._SLURM_USER, self._SLURM_GROUP)
+        chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
 
         # Create the virtualenv
         create_venv_cmd = [
@@ -200,6 +200,7 @@ class LicenseManagerAgentOps:
             "systemctl",
             "daemon-reload"
         ])
-        self._ETC_DEFAULT.unlink()
-        rmtree(self._LOG_DIR.as_posix())
-        rmtree(self._VENV_DIR.as_posix())
+        if self._ETC_DEFAULT.exists():
+            self._ETC_DEFAULT.unlink()
+        rmtree(self._LOG_DIR.as_posix(), ignore_errors=True)
+        rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
