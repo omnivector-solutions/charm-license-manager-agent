@@ -33,6 +33,8 @@ Using the built charm and the defined config, run the command to deploy the char
 juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
     --config ./license-manager-agent.yaml \
     --series centos7
+
+juju relate license-manager-agent:juju-info slurmctld
 ```
 
 ### Change configuration

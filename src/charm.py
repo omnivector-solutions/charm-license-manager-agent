@@ -50,7 +50,7 @@ class LicenseManagerAgentCharm(CharmBase):
         except:
             self.unit.status = BlockedStatus("Installation error")
             event.defer()
-            return
+            raise
 
         # Log and set status
         logger.debug("license-manager agent installed")
