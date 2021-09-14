@@ -47,10 +47,10 @@ class LicenseManagerAgentCharm(CharmBase):
         """Install license-manager-agent."""
         try:
             self._license_manager_agent_ops.install()
-        except Exception as e:
+        except:
             self.unit.status = BlockedStatus("Installation error")
             event.defer()
-            raise e
+            raise
 
         # Log and set status
         logger.debug("license-manager agent installed")
