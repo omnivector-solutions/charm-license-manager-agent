@@ -39,3 +39,8 @@ options:
     default:
     description: |
       Sentry DSN url.
+  minimum-licenses-ratio:
+    type: int
+    default: 2
+    description: |
+      Value to divide the maximum licenses to, e.g. 1/2 as default.

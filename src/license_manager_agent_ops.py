@@ -138,6 +138,7 @@ class LicenseManagerAgentOps:
         log_level = charm_config.get("log-level")
         stat_interval = charm_config.get("stat-interval")
         sentry_dsn = charm_config.get("sentry-dsn")
+        minimum_licenses_ratio = charm_config.get("minimum-licenses-ratio")
 
         log_base_dir = str(self._LOG_DIR)
 
@@ -148,6 +149,7 @@ class LicenseManagerAgentOps:
             "stat_interval": stat_interval,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
+            "minimum_licenses_ratio": minimum_licenses_ratio,
         }
 
         template_dir = Path("./src/templates/")

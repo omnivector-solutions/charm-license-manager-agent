@@ -25,6 +25,7 @@ license-manager-agent:
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
   sentry-dsn: "https://sentrydsn.com:123"
+  minimum-licenses-ratio: 2
 ```
 
 ### Deploy the charm

@@ -6,3 +6,4 @@ LM2_AGENT_LOG_BASE_DIR={{ log_base_dir }}
 LM2_AGENT_LOG_LEVEL={{ log_level }}
 LM2_AGENT_STAT_INTERVAL={{ stat_interval }}
 LM2_AGENT_SENTRY_DSN={{ sentry_dsn }}
+LM2_MINIMUM_LICENSES_RATIO={{ minimum_licenses_ratio }}
