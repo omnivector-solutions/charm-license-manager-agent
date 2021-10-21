@@ -20,5 +20,5 @@ requires:
         interface: juju-info
         scope: container
 provides:
-  prolog-epilog:
-    interface: prolog-epilog
+    prolog-epilog:
+        interface: prolog-epilog
