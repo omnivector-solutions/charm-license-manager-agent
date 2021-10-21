@@ -3,14 +3,12 @@ Description=license-manager-agent
 After=network.target
 
 [Service]
-Type=simple
+Type=oneshot
 User=root
 Group=root
 WorkingDirectory=/srv/license-manager-agent-venv
 EnvironmentFile=-/etc/default/license-manager-agent
-ExecStart=/srv/license-manager-agent-venv/bin/uvicorn lm_agent.main:app --port 8010
-WatchdogSec=900
-Restart=always
+ExecStart=/srv/license-manager-agent-venv/bin/reconcile.py
 
 [Install]
 Alias=license-manager-agent.service

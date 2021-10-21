@@ -22,6 +22,8 @@ class LicenseManagerAgentOps:
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
     _SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
     _SYSTEMD_SERVICE_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_SERVICE_NAME
+    _SYSTEMD_TIMER_NAME = "license-manager-agent.timer"
+    _SYSTEMD_TIMER_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_TIMER_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
     _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
     _SLURM_USER = "slurm"
@@ -93,17 +95,13 @@ class LicenseManagerAgentOps:
         )
 
         # Setup systemd service file
-        copy2(
-            "./src/templates/license-manager-agent.service",
-            self._SYSTEMD_SERVICE_FILE.as_posix()
-        )
+        copy2("./src/templates/license-manager-agent.service",
+              self._SYSTEMD_SERVICE_FILE.as_posix())
+        copy2("./src/templates/license-manager-agent.timer",
+              self._SYSTEMD_TIMER_FILE.as_posix())
 
-        # Enable the systemd service
-        subprocess.call([
-            "systemctl",
-            "enable",
-            self._SYSTEMD_SERVICE_NAME,
-        ])
+        # Enable the systemd timer
+        self.license_manager_agent_systemctl("enable")
 
     def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
@@ -169,7 +167,7 @@ class LicenseManagerAgentOps:
         cmd = [
             "systemctl",
             operation,
-            self._SYSTEMD_SERVICE_NAME,
+            self._SYSTEMD_TIMER_NAME,
         ]
         try:
             subprocess.call(cmd)
@@ -196,6 +194,8 @@ class LicenseManagerAgentOps:
         self.license_manager_agent_systemctl("disable")
         if self._SYSTEMD_SERVICE_FILE.exists():
             self._SYSTEMD_SERVICE_FILE.unlink()
+        if self._SYSTEMD_TIMER_FILE.exists():
+            self._SYSTEMD_TIMER_FILE.unlink()
         subprocess.call([
             "systemctl",
             "daemon-reload"

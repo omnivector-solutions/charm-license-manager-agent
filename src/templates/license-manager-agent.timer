@@ -1,0 +1,10 @@
+[Unit]
+Description=license-manager-agent timer
+After=network.target
+
+[Timer]
+OnActiveSec=15min
+Persistent=True
+
+[Install]
+WantedBy=timers.target
