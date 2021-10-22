@@ -5,7 +5,7 @@ import logging
 from ops.charm import CharmBase
 from ops.framework import StoredState
 from ops.main import main
-from ops.model import ActiveStatus, BlockedStatus, WaitingStatus
+from ops.model import ActiveStatus, BlockedStatus
 
 from interface_prolog_epilog import PrologEpilog
 from license_manager_agent_ops import LicenseManagerAgentOps
@@ -22,7 +22,6 @@ class LicenseManagerAgentCharm(CharmBase):
     def __init__(self, *args):
         """Initialize and observe."""
         super().__init__(*args)
-
 
         self._stored.set_default(
             installed=False,
@@ -47,7 +46,8 @@ class LicenseManagerAgentCharm(CharmBase):
         """Install license-manager-agent."""
         try:
             self._license_manager_agent_ops.install()
-        except:
+        except Exception as e:
+            logger.error(f"Error installing agent: {e}")
             self.unit.status = BlockedStatus("Installation error")
             event.defer()
             raise
@@ -68,6 +68,7 @@ class LicenseManagerAgentCharm(CharmBase):
         """Configure license-manager-agent with charm config."""
         # Write out the /etc/default/license-manage-agent config
         self._license_manager_agent_ops.configure_etc_default()
+        self._license_manager_agent_ops.setup_systemd_service()
 
         # Make sure the start hook has ran before we are restarting the service
         if self._stored.init_started:

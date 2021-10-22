@@ -3,7 +3,7 @@ Description=license-manager-agent timer
 After=network.target
 
 [Timer]
-OnActiveSec=15min
+OnUnitActiveSec={{ stat_interval }}
 Persistent=True
 
 [Install]

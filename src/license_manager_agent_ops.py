@@ -94,14 +94,27 @@ class LicenseManagerAgentOps:
             "/srv/license-manager-agent-venv/bin/slurmctld_epilog"
         )
 
-        # Setup systemd service file
-        copy2("./src/templates/license-manager-agent.service",
-              self._SYSTEMD_SERVICE_FILE.as_posix())
-        copy2("./src/templates/license-manager-agent.timer",
-              self._SYSTEMD_TIMER_FILE.as_posix())
-
+        self.setup_systemd_service()
         # Enable the systemd timer
         self.license_manager_agent_systemctl("enable")
+
+    def setup_systemd_service(self):
+        """Setup Systemd service and timer."""
+        copy2("./src/templates/license-manager-agent.service",
+              self._SYSTEMD_SERVICE_FILE.as_posix())
+
+        charm_config = self._charm.model.config
+        stat_interval = charm_config.get("stat-interval")
+        ctxt = {"stat_interval": stat_interval}
+
+        template_dir = Path("./src/templates/")
+        environment = Environment(loader=FileSystemLoader(template_dir))
+        template = environment.get_template(_SYSTEMD_TIMER_NAME)
+
+        rendered_template = template.render(ctxt)
+        self._SYSTEMD_TIMER_FILE.write_text(rendered_template)
+
+        self.license_manager_agent_systemctl("daemon-reload")
 
     def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
@@ -134,7 +147,6 @@ class LicenseManagerAgentOps:
         backend_base_url = charm_config.get("license-manager-backend-base-url")
 
         log_level = charm_config.get("log-level")
-        stat_interval = charm_config.get("stat-interval")
         sentry_dsn = charm_config.get("sentry-dsn")
 
         log_base_dir = str(self._LOG_DIR)
@@ -143,7 +155,6 @@ class LicenseManagerAgentOps:
             "sentry_dsn": sentry_dsn,
             "log_level": log_level,
             "jwt_key": jwt_key,
-            "stat_interval": stat_interval,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
         }

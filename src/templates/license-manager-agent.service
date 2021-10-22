@@ -8,7 +8,7 @@ User=root
 Group=root
 WorkingDirectory=/srv/license-manager-agent-venv
 EnvironmentFile=-/etc/default/license-manager-agent
-ExecStart=/srv/license-manager-agent-venv/bin/reconcile.py
+ExecStart=/srv/license-manager-agent-venv/bin/reconcile
 
 [Install]
 Alias=license-manager-agent.service
