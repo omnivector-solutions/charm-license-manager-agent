@@ -20,7 +20,7 @@ $ charmcraft pack
 license-manager-agent:
   log-level: DEBUG
   stat-interval: 60
-  jwt-key: "your-jwt-key-to-access-the-licnese-manager-backend"
+  jwt-key: "your-jwt-key-to-access-the-license-manager-backend"
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
