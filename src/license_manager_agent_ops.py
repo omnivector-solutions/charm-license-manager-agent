@@ -109,7 +109,7 @@ class LicenseManagerAgentOps:
 
         template_dir = Path("./src/templates/")
         environment = Environment(loader=FileSystemLoader(template_dir))
-        template = environment.get_template(_SYSTEMD_TIMER_NAME)
+        template = environment.get_template(self._SYSTEMD_TIMER_NAME)
 
         rendered_template = template.render(ctxt)
         self._SYSTEMD_TIMER_FILE.write_text(rendered_template)
