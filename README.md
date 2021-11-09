@@ -1,7 +1,8 @@
-# charm-license-manager-agent
+# License Manager agent Charm
 
 
 # Usage
+
 Follow the steps below to get started.
 
 ### Build the charm
@@ -9,8 +10,19 @@ Follow the steps below to get started.
 Running the following command will produce a `.charm` file,
 `license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm`:
 ```bash
-$ charmcraft pack
+$ make charm
 ```
+
+### Linter
+
+The linter can be invoked with:
+
+```bash
+$ make lint
+```
+
+This requires `flake8` and `flake8-docstrings`. Make sure to have them
+available, either in a virtual environment or via a native package.
 
 ### Create the license-manager-agent charm config
 

@@ -2,3 +2,4 @@
 build/
 *.charm
 license-manager-agent.yaml
+version
