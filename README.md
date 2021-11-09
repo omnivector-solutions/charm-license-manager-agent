@@ -20,11 +20,10 @@ $ charmcraft pack
 license-manager-agent:
   log-level: DEBUG
   stat-interval: 60
-  jwt-key: "your-jwt-key-to-access-the-license-manager-backend"
+  jwt-key: "your.jwt.key"
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
-  sentry-dsn: "https://sentrydsn.com:123"
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
 ```
 
