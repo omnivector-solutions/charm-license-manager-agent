@@ -1,6 +1,4 @@
-"""
-LicenseManagerAgentOps.
-"""
+"""LicenseManagerAgentOps."""
 import logging
 import subprocess
 from pathlib import Path
@@ -25,6 +23,8 @@ class LicenseManagerAgentOps:
     _SYSTEMD_TIMER_NAME = "license-manager-agent.timer"
     _SYSTEMD_TIMER_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_TIMER_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
+    PROLOG_PATH = _VENV_DIR / "bin/slurmctld_prolog"
+    EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
     _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
     _SLURM_USER = "slurm"
     _SLURM_GROUP = "slurm"
@@ -80,26 +80,20 @@ class LicenseManagerAgentOps:
             out = subprocess.check_output(pip_install_cmd).decode().strip()
             logger.debug("license-manager-agent installed")
             logger.debug(f"## pip install output: {out}")
-        except:
-            logger.error("Trouble installing license-manager, please debug")
+        except Exception as e:
+            logger.error(f"Error installing license-manager: {e}")
             raise Exception("License manager not installed.")
 
         # Copy the prolog/epilog wrappers
-        copy2(
-            "./src/templates/slurmctld_prolog.sh",
-            "/srv/license-manager-agent-venv/bin/slurmctld_prolog"
-        )
-        copy2(
-            "./src/templates/slurmctld_epilog.sh",
-            "/srv/license-manager-agent-venv/bin/slurmctld_epilog"
-        )
+        copy2("./src/templates/slurmctld_prolog.sh", self.PROLOG_PATH)
+        copy2("./src/templates/slurmctld_epilog.sh", self.EPILOG_PATH)
 
         self.setup_systemd_service()
         # Enable the systemd timer
         self.license_manager_agent_systemctl("enable")
 
     def setup_systemd_service(self):
-        """Setup Systemd service and timer."""
+        """Set up Systemd service and timer."""
         copy2("./src/templates/license-manager-agent.service",
               self._SYSTEMD_SERVICE_FILE.as_posix())
 
@@ -172,9 +166,7 @@ class LicenseManagerAgentOps:
         self._ETC_DEFAULT.write_text(rendered_template)
 
     def license_manager_agent_systemctl(self, operation: str):
-        """
-        Run license-manager-agent systemctl command.
-        """
+        """Run license-manager-agent systemctl command."""
         cmd = [
             "systemctl",
             operation,
@@ -186,8 +178,7 @@ class LicenseManagerAgentOps:
             logger.error(f"Error running {' '.join(cmd)} - {e}")
 
     def restart_license_manager_agent(self):
-        """
-        Stop and start the license-manager-agent.
+        """Stop and start the license-manager-agent.
 
         NOTE: We should probably use reload instead. Using stop/start
         temporarily..
@@ -198,9 +189,7 @@ class LicenseManagerAgentOps:
         self.license_manager_agent_systemctl("start")
 
     def remove_license_manager_agent(self):
-        """
-        Remove the things we have created.
-        """
+        """Remove the things we have created."""
         self.license_manager_agent_systemctl("stop")
         self.license_manager_agent_systemctl("disable")
         if self._SYSTEMD_SERVICE_FILE.exists():

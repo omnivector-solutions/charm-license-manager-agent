@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """LicenseManagerAgentCharm."""
 import logging
+from pathlib import Path
 
 from ops.charm import CharmBase
 from ops.framework import StoredState
@@ -52,6 +53,8 @@ class LicenseManagerAgentCharm(CharmBase):
             event.defer()
             raise
 
+        self.unit.set_workload_version(Path("version").read_text().strip())
+
         # Log and set status
         logger.debug("license-manager agent installed")
         self.unit.status = ActiveStatus("license-manager-agent installed")
@@ -82,6 +85,16 @@ class LicenseManagerAgentCharm(CharmBase):
     def _upgrade_to_latest(self, event):
         version = event.params["version"]
         self._license_manager_agent_ops.upgrade(version)
+
+    @property
+    def prolog_path(self) -> str:
+        """Return the path to the prolog script."""
+        return self._license_manager_agent_ops.PROLOG_PATH.as_posix()
+
+    @property
+    def epilog_path(self) -> str:
+        """Return the path to the epilog script."""
+        return self._license_manager_agent_ops.EPILOG_PATH.as_posix()
 
 
 if __name__ == "__main__":
