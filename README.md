@@ -25,6 +25,7 @@ license-manager-agent:
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
   sentry-dsn: "https://sentrydsn.com:123"
+  license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
 ```
 
 ### Deploy the charm
