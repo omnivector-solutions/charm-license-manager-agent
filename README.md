@@ -1,4 +1,4 @@
-# License Manager agent Charm
+# License Manager Agent Charm
 
 
 # Usage
