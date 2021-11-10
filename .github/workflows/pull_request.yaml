@@ -5,7 +5,7 @@ on: pull_request
 jobs:
     lint-charm:
         name: "Run linter"
-        runs-on: "ubuntu-focal"
+        runs-on: "ubuntu-20.04"
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-python@v2
@@ -23,7 +23,7 @@ jobs:
     build-charm:
         name: "Build the charms"
         needs: lint-charm
-        runs-on: "ubuntu-focal"
+        runs-on: "ubuntu-20.04"
         steps:
             - uses: actions/checkout@v2
               with:
