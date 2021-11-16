@@ -33,19 +33,16 @@ jobs:
                   sudo snap install charmcraft --channel=latest/stable --classic
             - name: "Install lxd"
               run: |
-                  sudo snap install lxd --channel=4.19/stable
-                  sudo snap refresh lxd --channel=4.19/stable
+                  sudo snap refresh lxd || echo "Failed refreshing LXD"
+                  echo "LXD version: $(lxd --version)"
             - name: "Configure lxd"
               run: |
-                  sudo grep -i lxd /etc/group /etc/passwd
                   sudo groupadd --force --system lxd
-                  sudo grep -i lxd /etc/group /etc/passwd
-                  echo sudo usermod --append --groups lxd $USER
                   sudo usermod --append --groups lxd $USER
-                  newgrp lxd
                   sudo snap start lxd
                   sudo lxd waitready --timeout=30
                   sudo lxd init --auto
+                  newgrp lxd
                   echo "groups: `groups`: $USER"
             - name: "Build the charms"
               shell: bash
