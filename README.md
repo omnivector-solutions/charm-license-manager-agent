@@ -49,6 +49,20 @@ juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
 juju relate license-manager-agent:juju-info slurmctld
 ```
 
+
+### Release the charm
+To make a new release of the License Manager Agent Charm:
+
+1. Update the CHANGELOG file, moving the changes under the Unreleased section to the new version section.
+2. Create a new annotated Git tag, adding a summary of the changes in the tag message:
+```
+git tag --annotate --sign x.y.z
+```
+3. Push the new tag to GitHub:
+```
+git push --tags
+```
+
 ### Change configuration
 Modify charm configuration.
 ```bash
