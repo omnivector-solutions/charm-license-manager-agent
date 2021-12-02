@@ -53,14 +53,15 @@ juju relate license-manager-agent:juju-info slurmctld
 ### Release the charm
 To make a new release of the License Manager Agent Charm:
 
-1. Update the CHANGELOG file, moving the changes under the Unreleased section to the new version section.
-2. Create a new annotated Git tag, adding a summary of the changes in the tag message:
-```
-git tag --annotate --sign x.y.z
+1. Update the CHANGELOG file, moving the changes under the Unreleased section to the new version section. Always keep an `Unreleased` section at the top.
+2. Create a new commit with the title `Release x.y.z`
+3. Create a new annotated Git tag, adding a summary of the changes in the tag message:
+```bash
+$ git tag --annotate --sign x.y.z
 ```
 3. Push the new tag to GitHub:
-```
-git push --tags
+```bash
+$ git push --tags
 ```
 
 ### Change configuration
