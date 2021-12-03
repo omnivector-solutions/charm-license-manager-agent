@@ -1,6 +1,3 @@
-{% if jwt_key %}
-LM2_AGENT_BACKEND_API_TOKEN={{ jwt_key }}
-{% endif %}
 LM2_AGENT_BACKEND_BASE_URL={{ license_manager_backend_base_url }}
 LM2_AGENT_LOG_BASE_DIR={{ log_base_dir }}
 LM2_AGENT_LOG_LEVEL={{ log_level }}
@@ -11,3 +8,7 @@ LM2_AGENT_LMUTIL_PATH={{ lmutil_path }}
 {% if rlmutil_path %}
 LM2_AGENT_RLMUTIL_PATH={{ rlmutil_path }}
 {% endif %}
+LM2_AGENT_AUTH0_DOMAIN={{ auth0_domain }}
+LM2_AGENT_AUTH0_AUDIENCE={{ auth0_audience }}
+LM2_AGENT_AUTH0_CLIENT_ID={{ auth0_client_id }}
+LM2_AGENT_AUTH0_CLIENT_SECRET={{ auth0_client_secret }}

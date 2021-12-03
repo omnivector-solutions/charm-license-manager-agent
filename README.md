@@ -32,13 +32,16 @@ Create a text file `license-manager-agent.yaml` with this content:
 license-manager-agent:
   log-level: DEBUG
   stat-interval: 60
-  jwt-key: "your.jwt.key"
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
   lmutil-path: "/usr/local/bin/lmutil"
   rlmutil-path: "/usr/local/bin/rlmutil"
+  auth0-domain: "<domain-collected-from-auth0>"
+  auth0-audience: "<audience-for-auth0-api>"
+  auth0-client-id: "<client-id-for-auth0-app>"
+  auth0-client-secret: "<client-secret-for-auth0-app>"
 ```
 
 ### Deploy the charm
@@ -72,6 +75,6 @@ $ git push --tags
 
 To modify the charm configuration after it was deployed:
 ```bash
-$ juju config license-manager-agent jwt-key=somenewvalue
+juju config license-manager-agent license-manager-backend-base-url=somenewvalue
 ```
 Running the above command will tell the charm to reconfigure and restart license-manager-agent.
