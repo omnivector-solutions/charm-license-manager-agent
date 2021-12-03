@@ -32,11 +32,14 @@ available, either in a virtual environment or via a native package.
 license-manager-agent:
   log-level: DEBUG
   stat-interval: 60
-  jwt-key: "your.jwt.key"
   pypi-url: "https://pypicloud.omnivector.solutions"
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
+  auth0-domain: "<domain-collected-from-auth0>"
+  auth0-audience: "<audience-for-auth0-api>"
+  auth0-client-id: "<client-id-for-auth0-app>"
+  auth0-client-secret: "<client-secret-for-auth0-app>"
 ```
 
 ### Deploy the charm
@@ -52,7 +55,7 @@ juju relate license-manager-agent:juju-info slurmctld
 ### Change configuration
 Modify charm configuration.
 ```bash
-juju config license-manager-agent jwt-key=somenewvalue
+juju config license-manager-agent license-manager-backend-base-url=somenewvalue
 ```
 Running the above command will tell the charm to reconfigure and restart license-manager-agent.
 

@@ -137,20 +137,27 @@ class LicenseManagerAgentOps:
     def configure_etc_default(self):
         """Get the needed config, render and write out the file."""
         charm_config = self._charm.model.config
-        jwt_key = charm_config.get("jwt-key")
         backend_base_url = charm_config.get("license-manager-backend-base-url")
 
         log_level = charm_config.get("log-level")
         sentry_dsn = charm_config.get("sentry-dsn")
+
+        auth0_domain = charm_config.get("auth0-domain")
+        auth0_audience = charm_config.get("auth0-audienc")
+        auth0_client_id = charm_config.get("auth0-client-id")
+        auth0_client_secret = charm_config.get("auth0-client-secret")
 
         log_base_dir = str(self._LOG_DIR)
 
         ctxt = {
             "sentry_dsn": sentry_dsn,
             "log_level": log_level,
-            "jwt_key": jwt_key,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
+            "auth0_domain": auth0_domain,
+            "auth0_audience": auth0_audience,
+            "auth0_client_id": auth0_client_id,
+            "auth0_client_secret": auth0_client_secret,
         }
 
         template_dir = Path("./src/templates/")
