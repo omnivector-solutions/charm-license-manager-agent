@@ -108,7 +108,7 @@ class LicenseManagerAgentOps:
         rendered_template = template.render(ctxt)
         self._SYSTEMD_TIMER_FILE.write_text(rendered_template)
 
-        self.license_manager_agent_systemctl("daemon-reload")
+        subprocess.call(["systemctl", "daemon-reload"])
 
     def upgrade(self, version: str):
         """Upgrade license-manager-agent."""
@@ -196,10 +196,7 @@ class LicenseManagerAgentOps:
             self._SYSTEMD_SERVICE_FILE.unlink()
         if self._SYSTEMD_TIMER_FILE.exists():
             self._SYSTEMD_TIMER_FILE.unlink()
-        subprocess.call([
-            "systemctl",
-            "daemon-reload"
-        ])
+        subprocess.call(["systemctl", "daemon-reload"])
         if self._ETC_DEFAULT.exists():
             self._ETC_DEFAULT.unlink()
         rmtree(self._LOG_DIR.as_posix(), ignore_errors=True)
