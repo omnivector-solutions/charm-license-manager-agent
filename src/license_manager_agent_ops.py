@@ -143,6 +143,9 @@ class LicenseManagerAgentOps:
         log_level = charm_config.get("log-level")
         sentry_dsn = charm_config.get("sentry-dsn")
 
+        lmstat_path = charm_config.get("lmstat-path")
+        rlmstat_path = charm_config.get("rlmstat-path")
+
         log_base_dir = str(self._LOG_DIR)
 
         ctxt = {
@@ -151,6 +154,8 @@ class LicenseManagerAgentOps:
             "jwt_key": jwt_key,
             "log_base_dir": log_base_dir,
             "license_manager_backend_base_url": backend_base_url,
+            "lmstat_path": lmstat_path,
+            "rlmstat_path": rlmstat_path,
         }
 
         template_dir = Path("./src/templates/")

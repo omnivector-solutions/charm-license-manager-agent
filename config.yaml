@@ -39,3 +39,13 @@ options:
     default:
     description: |
       Sentry DSN url.
+  lmstat-path:
+    type: string
+    default:
+    description: |
+      Path to the lmstat binary. Leave blank if not needed.
+  rlmstat-path:
+    type: string
+    default:
+    description: |
+      Path to the rlmstat binary. Leave blank if not needed.
