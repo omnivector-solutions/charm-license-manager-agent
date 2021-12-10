@@ -1,7 +1,7 @@
 # License Manager Agent Charm
 
 
-# Usage
+## Usage
 
 Follow the steps below to get started.
 
@@ -26,7 +26,7 @@ available, either in a virtual environment or via a native package.
 
 ### Create the license-manager-agent charm config
 
-`license-manager-agent.yaml`
+Create a text file `license-manager-agent.yaml` with this content:
 
 ```yaml
 license-manager-agent:
@@ -37,18 +37,22 @@ license-manager-agent:
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
+  lmstat-path: "/usr/local/bin/lmstat"
+  rlmstat-path: "/usr/local/bin/rlmstat"
 ```
 
 ### Deploy the charm
-Using the built charm and the defined config, run the command to deploy the charm.
+
+Using the built charm and the defined config, run the following command to
+deploy the charm:
+
 ```bash
-juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
-    --config ./license-manager-agent.yaml \
-    --series centos7
+$ juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
+              --config ./license-manager-agent.yaml \
+              --series centos7
 
-juju relate license-manager-agent:juju-info slurmctld
+$ juju relate license-manager-agent:juju-info slurmctld
 ```
-
 
 ### Release the charm
 To make a new release of the License Manager Agent Charm:
@@ -59,15 +63,15 @@ To make a new release of the License Manager Agent Charm:
 ```bash
 $ git tag --annotate --sign x.y.z
 ```
-3. Push the new tag to GitHub:
+4. Push the new tag to GitHub:
 ```bash
 $ git push --tags
 ```
 
 ### Change configuration
-Modify charm configuration.
+
+To modify the charm configuration after it was deployed:
 ```bash
-juju config license-manager-agent jwt-key=somenewvalue
+$ juju config license-manager-agent jwt-key=somenewvalue
 ```
 Running the above command will tell the charm to reconfigure and restart license-manager-agent.
-
