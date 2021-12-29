@@ -50,8 +50,8 @@ deploy the charm:
 $ juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
               --config ./license-manager-agent.yaml \
               --series centos7
-
 $ juju relate license-manager-agent:juju-info slurmctld
+$ juju relate license-manager-agent:prolog-epilog slurmctld
 ```
 
 ### Release the charm
