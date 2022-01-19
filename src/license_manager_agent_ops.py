@@ -172,13 +172,11 @@ class LicenseManagerAgentOps:
 
     def license_manager_agent_systemctl(self, operation: str):
         """Run license-manager-agent systemctl command."""
-        cmd = [
-            "systemctl",
-            operation,
-            self._SYSTEMD_TIMER_NAME,
-        ]
+
         try:
-            subprocess.call(cmd)
+            for service in [self._SYSTEMD_TIMER_NAME, self._SYSTEMD_SERVICE_NAME]:
+                cmd = ["systemctl", operation, service]
+                subprocess.call(cmd)
         except subprocess.CalledProcessError as e:
             logger.error(f"Error running {' '.join(cmd)} - {e}")
 
@@ -188,9 +186,7 @@ class LicenseManagerAgentOps:
         NOTE: We should probably use reload instead. Using stop/start
         temporarily..
         """
-        # Stop license-manager-agent
         self.license_manager_agent_systemctl("stop")
-        # Start license-manager-agent
         self.license_manager_agent_systemctl("start")
 
     def remove_license_manager_agent(self):
