@@ -37,8 +37,8 @@ license-manager-agent:
   pypi-username: "<pypi-username>"
   pypi-password: "<pypi-password>"
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
-  lmstat-path: "/usr/local/bin/lmstat"
-  rlmstat-path: "/usr/local/bin/rlmstat"
+  lmutil-path: "/usr/local/bin/lmutil"
+  rlmutil-path: "/usr/local/bin/rlmutil"
 ```
 
 ### Deploy the charm
