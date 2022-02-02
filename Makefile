@@ -18,4 +18,4 @@ clean: ## Remove build dirs, temp files, and charms
 
 .PHONY: charm
 charm: version ## Pack the charm
-	@charmcraft pack
+	@charmcraft pack --verbose

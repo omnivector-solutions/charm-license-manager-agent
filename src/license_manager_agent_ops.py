@@ -23,6 +23,7 @@ class LicenseManagerAgentOps:
     _SYSTEMD_TIMER_NAME = "license-manager-agent.timer"
     _SYSTEMD_TIMER_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_TIMER_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
+    _VENV_PYTHON = Path("/srv/license-manager-agent-venv/bin/python3.8")
     PROLOG_PATH = _VENV_DIR / "bin/slurmctld_prolog"
     EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
     _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
@@ -38,8 +39,7 @@ class LicenseManagerAgentOps:
         url = url.split("://")[1]
         pypi_username = self._charm.model.config["pypi-username"]
         pypi_password = self._charm.model.config["pypi-password"]
-        return (f"https://{pypi_username}:{pypi_password}@"
-                f"{url}/simple/{self._PACKAGE_NAME}")
+        return f"https://{pypi_username}:{pypi_password}@{url}/simple"
 
     def install(self):
         """Install license-manager-agent and setup ops."""
@@ -60,18 +60,20 @@ class LicenseManagerAgentOps:
         logger.debug("license-manager-agent virtualenv created")
 
         # Ensure we have the latest pip
-        upgrade_pip_cmd = [
-            self._PIP_CMD,
-            "install",
-            "--upgrade",
-            "pip",
-        ]
-        subprocess.call(upgrade_pip_cmd)
+        #upgrade_pip_cmd = [
+        #    self._PIP_CMD,
+        #    "install",
+        #    "--upgrade",
+        #    "pip",
+        #]
+        #subprocess.call(upgrade_pip_cmd)
 
         pip_install_cmd = [
-            self._PIP_CMD,
+            self._VENV_PYTHON.as_posix(),
+            "-m",
+            "pip",
             "install",
-            "-f",
+            "--index-url",
             self._derived_pypi_url(),
             self._PACKAGE_NAME,
         ]
@@ -117,10 +119,12 @@ class LicenseManagerAgentOps:
         self.license_manager_agent_systemctl("stop")
 
         pip_install_cmd = [
-            self._PIP_CMD,
+            self._VENV_PYTHON.as_posix(),
+            "-m",
+            "pip",
             "install",
             "--upgrade",
-            "-f",
+            "--index-url",
             self._derived_pypi_url(),
             f"{self._PACKAGE_NAME}=={version}",
         ]
