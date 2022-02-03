@@ -145,7 +145,7 @@ class LicenseManagerAgentOps:
         lmutil_path = charm_config.get("lmutil-path")
         rlmutil_path = charm_config.get("rlmutil-path")
         auth0_domain = charm_config.get("auth0-domain")
-        auth0_audience = charm_config.get("auth0-audienc")
+        auth0_audience = charm_config.get("auth0-audience")
         auth0_client_id = charm_config.get("auth0-client-id")
         auth0_client_secret = charm_config.get("auth0-client-secret")
 
