@@ -77,7 +77,7 @@ class LicenseManagerAgentOps:
         ]
         logger.debug(f"## Running: {pip_install_cmd}")
         try:
-            out = subprocess.check_output(pip_install_cmd).decode().strip()
+            out = subprocess.check_output(pip_install_cmd, env={}).decode().strip()
             logger.debug("license-manager-agent installed")
             logger.debug(f"## pip install output: {out}")
         except Exception as e:
