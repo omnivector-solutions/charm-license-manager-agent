@@ -9,7 +9,7 @@ Unreleased
 
 - fix command to reload systemd settings when installing
 - add config options to set the path to rlmutil and lmutil
--- add config options to set the path for ls-dyna
+- add config options to set the path for ls-dyna
 
 0.0.1 - 2021-11-10
 ------------------
