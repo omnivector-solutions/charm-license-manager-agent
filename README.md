@@ -38,6 +38,7 @@ license-manager-agent:
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
   lmutil-path: "/usr/local/bin/lmutil"
   rlmutil-path: "/usr/local/bin/rlmutil"
+  lsdyna-path: "/usr/local/bin/lstc_qrun"
   auth0-domain: "<domain-collected-from-auth0>"
   auth0-audience: "<audience-for-auth0-api>"
   auth0-client-id: "<client-id-for-auth0-app>"

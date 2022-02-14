@@ -44,6 +44,11 @@ options:
     default:
     description: |
       Path to the rlmutil binary. Leave blank if not needed.
+  lsdyna-path:
+    type: string
+    default:
+    description: |
+      Path to the LS-Dyna binary. Leave blank if not needed.
   auth0-domain:
     type: string
     default:
