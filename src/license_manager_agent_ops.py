@@ -1,5 +1,7 @@
 """LicenseManagerAgentOps."""
+import os
 import logging
+import shutil
 import subprocess
 from pathlib import Path
 from shutil import copy2, rmtree, chown
@@ -40,6 +42,20 @@ class LicenseManagerAgentOps:
         pypi_password = self._charm.model.config["pypi-password"]
         return (f"https://{pypi_username}:{pypi_password}@"
                 f"{url}/simple/{self._PACKAGE_NAME}")
+
+    def _setup_cache_dir(self):
+
+        def mkdir_recursive(path: Path):
+            if not path.parent.exists():
+                mkdir_recursive(path.parent)
+            if not path.exists():
+                path.mkdir()
+            shutil.chown(path, user="slurm")
+            path.chmod(0o700)
+
+        cache_dir = Path(self._charm.model.config["cache-dir"])
+        mkdir_recursive(cache_dir)
+
 
     def install(self):
         """Install license-manager-agent and setup ops."""
@@ -144,6 +160,7 @@ class LicenseManagerAgentOps:
 
         lmutil_path = charm_config.get("lmutil-path")
         rlmutil_path = charm_config.get("rlmutil-path")
+        cache_dir = charm_config.get("cache-dir")
         lsdyna_path = charm_config.get("lsdyna-path")
         auth0_domain = charm_config.get("auth0-domain")
         auth0_audience = charm_config.get("auth0-audience")
@@ -159,6 +176,7 @@ class LicenseManagerAgentOps:
             "license_manager_backend_base_url": backend_base_url,
             "lmutil_path": lmutil_path,
             "rlmutil_path": rlmutil_path,
+            "cache_dir": cache_dir,
             "lsdyna_path": lsdyna_path,
             "auth0_domain": auth0_domain,
             "auth0_audience": auth0_audience,

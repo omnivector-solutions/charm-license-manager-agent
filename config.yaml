@@ -34,6 +34,11 @@ options:
     default:
     description: |
       Sentry DSN url.
+  cache-dir:
+    type: string
+    default: /var/cache/license-manager
+    description: |
+      Directory where access tokens will be cached. Must be r/w for root and slurm user.
   lmutil-path:
     type: string
     default:
