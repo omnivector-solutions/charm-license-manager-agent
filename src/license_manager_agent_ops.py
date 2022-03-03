@@ -1,5 +1,7 @@
 """LicenseManagerAgentOps."""
+import os
 import logging
+import shutil
 import subprocess
 from pathlib import Path
 from shutil import copy2, rmtree, chown
@@ -40,6 +42,14 @@ class LicenseManagerAgentOps:
         pypi_password = self._charm.model.config["pypi-password"]
         return (f"https://{pypi_username}:{pypi_password}@"
                 f"{url}/simple/{self._PACKAGE_NAME}")
+
+    def setup_cache_dir(self):
+        cache_dir = Path("/var/cache/license-manager")
+        if not cache_dir.exists():
+            cache_dir.mkdir()
+            shutil.chown(cache_dir, user="slurm")
+            cache_dir.chmod(0o700)
+
 
     def install(self):
         """Install license-manager-agent and setup ops."""
@@ -90,6 +100,7 @@ class LicenseManagerAgentOps:
         copy2("./src/templates/slurmctld_prolog.sh", self.PROLOG_PATH)
         copy2("./src/templates/slurmctld_epilog.sh", self.EPILOG_PATH)
 
+        self.setup_cache_dir()
         self.setup_systemd_service()
         # Enable the systemd timer
         self.license_manager_agent_systemctl("enable")
