@@ -73,7 +73,6 @@ class LicenseManagerAgentOps:
         upgrade_pip_cmd = [
             self._PIP_CMD,
             "install",
-            "--use-deprecated=html5lib",
             "--upgrade",
             "pip",
         ]
@@ -82,7 +81,6 @@ class LicenseManagerAgentOps:
         pip_install_cmd = [
             self._PIP_CMD,
             "install",
-            "--use-deprecated=html5lib",
             "-f",
             self._derived_pypi_url(),
             self._PACKAGE_NAME,
@@ -132,7 +130,6 @@ class LicenseManagerAgentOps:
         pip_install_cmd = [
             self._PIP_CMD,
             "install",
-            "--use-deprecated=html5lib",
             "--upgrade",
             "-f",
             self._derived_pypi_url(),
