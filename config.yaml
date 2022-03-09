@@ -49,6 +49,11 @@ options:
     default:
     description: |
       Path to the LS-Dyna binary. Leave blank if not needed.
+  lmxendutil-path:
+    type: string
+    default:
+    description: |
+      Path to the LM-X binary. Leave blank if not needed.
   auth0-domain:
     type: string
     default:

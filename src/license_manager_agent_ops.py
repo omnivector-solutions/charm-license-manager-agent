@@ -156,6 +156,7 @@ class LicenseManagerAgentOps:
         lmutil_path = charm_config.get("lmutil-path")
         rlmutil_path = charm_config.get("rlmutil-path")
         lsdyna_path = charm_config.get("lsdyna-path")
+        lmxendutil_path = charm_config.get("lmxendutil-path")
         auth0_domain = charm_config.get("auth0-domain")
         auth0_audience = charm_config.get("auth0-audience")
         auth0_client_id = charm_config.get("auth0-client-id")
@@ -171,6 +172,7 @@ class LicenseManagerAgentOps:
             "lmutil_path": lmutil_path,
             "rlmutil_path": rlmutil_path,
             "lsdyna_path": lsdyna_path,
+            "lmxendutil_path": lmxendutil_path,
             "auth0_domain": auth0_domain,
             "auth0_audience": auth0_audience,
             "auth0_client_id": auth0_client_id,
