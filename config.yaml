@@ -56,7 +56,7 @@ options:
       Path to the LM-X binary. Leave blank if not needed.
   use_reconcile_in_prolog_epilog:
     type: boolean
-    default: true
+    default: True
     description: |
       Flags if reconciliation should be triggered when running Prolog/Epilog scripts. Defaults to true.
   auth0-domain:
