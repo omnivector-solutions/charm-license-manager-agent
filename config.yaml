@@ -54,7 +54,7 @@ options:
     default:
     description: |
       Path to the LM-X binary. Leave blank if not needed.
-  use_reconcile_in_prolog_epilog:
+  use-reconcile-in-prolog-epilog:
     type: boolean
     default: True
     description: |
