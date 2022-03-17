@@ -76,8 +76,14 @@ $ git push --tags
 
 ### Change configuration
 
-To modify the charm configuration after it was deployed:
+To modify the charm configuration after it was deployed, use the `juju config` command. For example:
 ```bash
 juju config license-manager-agent license-manager-backend-base-url=somenewvalue
 ```
-Running the above command will tell the charm to reconfigure and restart license-manager-agent.
+
+If you wish to prevent Prolog/Epilog scripts from triggering a forced reconciliation, run:
+```bash
+juju config license manager-agent use-reconcile-in-prolog-epilog=false
+```
+
+Running the `juju config` command will tell the charm to reconfigure and restart license-manager-agent.

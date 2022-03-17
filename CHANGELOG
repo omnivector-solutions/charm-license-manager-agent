@@ -11,6 +11,7 @@ Unreleased
 - add config options to set the path to rlmutil and lmutil
 - add config options to set the path for ls-dyna
 - add config options to set the path for lm-x
+- add config option to define if reconciliation should run during Prolog/Epilog execution
 
 0.0.1 - 2021-11-10
 ------------------
