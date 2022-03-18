@@ -9,6 +9,7 @@ Group=root
 WorkingDirectory=/srv/license-manager-agent-venv
 EnvironmentFile=-/etc/default/license-manager-agent
 ExecStart=/srv/license-manager-agent-venv/bin/reconcile
+TimeoutStartSec=30
 
 [Install]
 Alias=license-manager-agent.service
