@@ -14,6 +14,11 @@ options:
     default: 300
     description: |
       Interval (in seconds) at which the reconcile cron will run.
+  timeout-interval:
+    type: int
+    default: 30
+    description: |
+      Interval (in seconds) at which the agent service will be killed if not finished.
   pypi-url:
     type: string
     default:
