@@ -115,11 +115,13 @@ class LicenseManagerAgentOps:
         template_dir = Path("./src/templates/")
         environment = Environment(loader=FileSystemLoader(template_dir))
 
-        timer_template = environment.get_template(self._SYSTEMD_TIMER_NAME)
+        timer_template_file = "license-manager-agent.timer.template"
+        timer_template = environment.get_template(timer_template_file)
         timer_rendered_template = timer_template.render(ctxt)
         self._SYSTEMD_TIMER_FILE.write_text(timer_rendered_template)
 
-        service_template = environment.get_template(self._SYSTEMD_SERVICE_NAME)
+        service_template_file = "license-manager-agent.service.template"
+        service_template = environment.get_template(service_template_file)
         service_rendered_template = service_template.render(ctxt)
         self._SYSTEMD_SERVICE_FILE.write_text(service_rendered_template)
 
