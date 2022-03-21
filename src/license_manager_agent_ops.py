@@ -105,19 +105,25 @@ class LicenseManagerAgentOps:
 
     def setup_systemd_service(self):
         """Set up Systemd service and timer."""
-        copy2("./src/templates/license-manager-agent.service",
-              self._SYSTEMD_SERVICE_FILE.as_posix())
-
         charm_config = self._charm.model.config
         stat_interval = charm_config.get("stat-interval")
-        ctxt = {"stat_interval": stat_interval}
-
+        timeout_interval = charm_config.get("timeout-interval")
+        ctxt = {
+            "stat_interval": stat_interval,
+            "timeout_interval": timeout_interval,
+        }
         template_dir = Path("./src/templates/")
         environment = Environment(loader=FileSystemLoader(template_dir))
-        template = environment.get_template(self._SYSTEMD_TIMER_NAME)
 
-        rendered_template = template.render(ctxt)
-        self._SYSTEMD_TIMER_FILE.write_text(rendered_template)
+        timer_template_file = "license-manager-agent.timer.template"
+        timer_template = environment.get_template(timer_template_file)
+        timer_rendered_template = timer_template.render(ctxt)
+        self._SYSTEMD_TIMER_FILE.write_text(timer_rendered_template)
+
+        service_template_file = "license-manager-agent.service.template"
+        service_template = environment.get_template(service_template_file)
+        service_rendered_template = service_template.render(ctxt)
+        self._SYSTEMD_SERVICE_FILE.write_text(service_rendered_template)
 
         subprocess.call(["systemctl", "daemon-reload"])
 

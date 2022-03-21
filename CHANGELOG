@@ -12,6 +12,7 @@ Unreleased
 - add config options to set the path for ls-dyna
 - add config options to set the path for lm-x
 - add config option to define if reconciliation should run during Prolog/Epilog execution
+- add config option `timeout-interval` to terminate the service in case it hangs
 
 0.0.1 - 2021-11-10
 ------------------
