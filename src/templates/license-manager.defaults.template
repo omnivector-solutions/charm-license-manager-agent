@@ -1,7 +1,9 @@
 LM2_AGENT_BACKEND_BASE_URL={{ license_manager_backend_base_url }}
 LM2_AGENT_LOG_BASE_DIR={{ log_base_dir }}
 LM2_AGENT_LOG_LEVEL={{ log_level }}
+{% if sentry_dsn %}
 LM2_AGENT_SENTRY_DSN={{ sentry_dsn }}
+{% endif %}
 {% if lmutil_path %}
 LM2_AGENT_LMUTIL_PATH={{ lmutil_path }}
 {% endif %}
