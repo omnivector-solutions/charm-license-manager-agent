@@ -36,7 +36,7 @@ options:
       PYPI PASSWORD in plain text.
   sentry-dsn:
     type: string
-    default:
+    default: ""
     description: |
       Sentry DSN url.
   lmutil-path:
