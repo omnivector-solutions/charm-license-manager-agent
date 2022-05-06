@@ -11,6 +11,8 @@ from ops.model import ActiveStatus, BlockedStatus
 from interface_prolog_epilog import PrologEpilog
 from license_manager_agent_ops import LicenseManagerAgentOps
 
+from charms.fluentbit.v0.fluentbit import FluentbitClient
+
 
 logger = logging.getLogger()
 
@@ -33,12 +35,15 @@ class LicenseManagerAgentCharm(CharmBase):
 
         self._license_manager_agent_ops = LicenseManagerAgentOps(self)
 
+        self._fluentbit = FluentbitClient(self, "fluentbit")
+
         event_handler_bindings = {
             self.on.install: self._on_install,
             self.on.start: self._on_start,
             self.on.config_changed: self._on_config_changed,
             self.on.remove: self._on_remove,
             self.on.upgrade_to_latest_action: self._upgrade_to_latest,
+            self.on["fluentbit"].relation_created: self._on_fluentbit_relation_created,
         }
         for event, handler in event_handler_bindings.items():
             self.framework.observe(event, handler)
@@ -85,6 +90,14 @@ class LicenseManagerAgentCharm(CharmBase):
     def _upgrade_to_latest(self, event):
         version = event.params["version"]
         self._license_manager_agent_ops.upgrade(version)
+
+    def _on_fluentbit_relation_created(self, event):
+        """Set up Fluentbit log forwarding."""
+        cfg = list()
+        cfg.extend(self._license_manager_agent_ops.fluentbit_config_epilog_log)
+        cfg.extend(self._license_manager_agent_ops.fluentbit_config_prolog_log)
+        cfg.extend(self._license_manager_agent_ops.fluentbit_config_lm_log)
+        self._fluentbit.configure(cfg)
 
     @property
     def prolog_path(self) -> str:
