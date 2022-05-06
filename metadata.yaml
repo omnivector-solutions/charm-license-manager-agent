@@ -21,3 +21,5 @@ requires:
         scope: container
     prolog-epilog:
         interface: prolog-epilog
+    fluentbit:
+        interface: fluentbit
