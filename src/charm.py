@@ -94,8 +94,6 @@ class LicenseManagerAgentCharm(CharmBase):
     def _on_fluentbit_relation_created(self, event):
         """Set up Fluentbit log forwarding."""
         cfg = list()
-        cfg.extend(self._license_manager_agent_ops.fluentbit_config_epilog_log)
-        cfg.extend(self._license_manager_agent_ops.fluentbit_config_prolog_log)
         cfg.extend(self._license_manager_agent_ops.fluentbit_config_lm_log)
         self._fluentbit.configure(cfg)
 

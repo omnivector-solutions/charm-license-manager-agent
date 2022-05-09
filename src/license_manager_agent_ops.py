@@ -233,46 +233,14 @@ class LicenseManagerAgentOps:
         rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
 
     @property
-    def fluentbit_config_epilog_log(self) -> list:
-        """Return Fluentbit configuration parameters to forward Epilog logs."""
-        cfg = [{"input": [("name",             "tail"),
-                          ("path",             "/var/log/license-manager-agent/slurmctld-epilog.log"),
-                          ("path_key",         "filename"),
-                          ("tag",              "epilog"),
-                          ("multiline.parser", "epilog")]},
-               {"multiline_parser": [("name",          "epilog"),
-                                     ("type",          "regex"),
-                                     ("flush_timeout", "1000"),
-                                     ("rule",          '"start_state"', '"^\[\d+-\d+-\d+ \d+:\d+:\d+,\d+\;\w+\] \w+.\w+:\d+ - \s+ .+"', '"cont"'), # noqa
-                                     ("rule",          '"cont"',        '"(.*)"',             '"cont"')]}] # noqa
-        return cfg
-
-    @property
-    def fluentbit_config_prolog_log(self) -> list:
-        """Return Fluentbit configuration parameters to forward Prolog logs."""
-        cfg = [{"input": [("name",             "tail"),
-                          ("path",             "/var/log/license-manager-agent/slurmctld-prolog.log"),
-                          ("path_key",         "filename"),
-                          ("tag",              "prolog"),
-                          ("multiline.parser", "prolog")]},
-               {"multiline_parser": [("name",          "prolog"),
-                                     ("type",          "regex"),
-                                     ("flush_timeout", "1000"),
-                                     ("rule",          '"start_state"', '"^\[\d+-\d+-\d+ \d+:\d+:\d+,\d+\;\w+\] \w+.\w+:\d+ - \s+ .+"', '"cont"'), # noqa
-                                     ("rule",          '"cont"',        '"(.*)"',             '"cont"')]}] # noqa
-        return cfg
-    
-    @property
     def fluentbit_config_lm_log(self) -> list:
         """Return Fluentbit configuration parameters to forward LM agent logs."""
         cfg = [{"input": [("name",             "tail"),
-                          ("path",             "/var/log/license-manager-agent/license-manager-agent.log"),
-                          ("path_key",         "filename"),
-                          ("tag",              "lm"),
-                          ("multiline.parser", "lm")]},
-               {"multiline_parser": [("name",          "lm"),
+                          ("path",             "/var/log/license-manager-agent/*.log"),
+                          ("multiline.parser", "multiline-lm")]},
+               {"multiline_parser": [("name",          "multiline-lm"),
                                      ("type",          "regex"),
                                      ("flush_timeout", "1000"),
-                                     ("rule",          '"start_state"', '"^\[\d+-\d+-\d+ \d+:\d+:\d+,\d+\;\w+\] \w+.\w+:\d+ - \s+ .+"', '"cont"'), # noqa
-                                     ("rule",          '"cont"',        '"(.*)"',             '"cont"')]}] # noqa
+                                     ("rule",          '"start_state"', '"/^\[(\d+(\-)?){3} (\d+(\:)?){3},\d+\;\w+\] .+/"', '"cont"'), # noqa
+                                     ("rule",          '"cont"',        '"/^([^\[].*)/"',             '"cont"')]}] # noqa
         return cfg
