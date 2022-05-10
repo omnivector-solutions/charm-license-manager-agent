@@ -237,6 +237,7 @@ class LicenseManagerAgentOps:
         """Return Fluentbit configuration parameters to forward LM agent logs."""
         cfg = [{"input": [("name",             "tail"),
                           ("path",             "/var/log/license-manager-agent/*.log"),
+                          ("tag",              "lm.*"),
                           ("multiline.parser", "multiline-lm")]},
                {"multiline_parser": [("name",          "multiline-lm"),
                                      ("type",          "regex"),
