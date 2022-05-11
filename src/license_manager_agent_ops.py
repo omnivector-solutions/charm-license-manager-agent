@@ -231,3 +231,17 @@ class LicenseManagerAgentOps:
             self._ETC_DEFAULT.unlink()
         rmtree(self._LOG_DIR.as_posix(), ignore_errors=True)
         rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
+
+    @property
+    def fluentbit_config_lm_log(self) -> list:
+        """Return Fluentbit configuration parameters to forward LM agent logs."""
+        cfg = [{"input": [("name",             "tail"),
+                          ("path",             "/var/log/license-manager-agent/*.log"),
+                          ("tag",              "lm.*"),
+                          ("multiline.parser", "multiline-lm")]},
+               {"multiline_parser": [("name",          "multiline-lm"),
+                                     ("type",          "regex"),
+                                     ("flush_timeout", "1000"),
+                                     ("rule",          '"start_state"', '"/^\[(\d+(\-)?){3} (\d+(\:)?){3},\d+\;\w+\] .+/"', '"cont"'), # noqa
+                                     ("rule",          '"cont"',        '"/^([^\[].*)/"',             '"cont"')]}] # noqa
+        return cfg
