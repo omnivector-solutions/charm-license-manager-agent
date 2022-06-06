@@ -84,3 +84,8 @@ options:
     default:
     description: |
       The secret key for the Auth0 app client to which tokens will be issued.
+  deploy-env:
+    type: string
+    default: STAGING
+    description: |
+      The deployment stage, e.g. PROD, STAGING, LOCAL

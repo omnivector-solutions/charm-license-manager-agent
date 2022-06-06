@@ -168,6 +168,7 @@ class LicenseManagerAgentOps:
         auth0_client_id = charm_config.get("auth0-client-id")
         auth0_client_secret = charm_config.get("auth0-client-secret")
         use_reconcile_in_prolog_epilog = charm_config.get("use-reconcile-in-prolog-epilog")
+        deploy_env = charm_config.get("deploy-env")
 
         log_base_dir = str(self._LOG_DIR)
 
@@ -185,6 +186,7 @@ class LicenseManagerAgentOps:
             "auth0_client_id": auth0_client_id,
             "auth0_client_secret": auth0_client_secret,
             "use_reconcile_in_prolog_epilog": use_reconcile_in_prolog_epilog,
+            "deploy_env": deploy_env,
         }
 
         template_dir = Path("./src/templates/")
