@@ -44,6 +44,7 @@ license-manager-agent:
   auth0-audience: "<audience-for-auth0-api>"
   auth0-client-id: "<client-id-for-auth0-app>"
   auth0-client-secret: "<client-secret-for-auth0-app>"
+  deploy-env: "STAGING" # can be LOCAL or PROD as well
 ```
 
 ### Deploy the charm
