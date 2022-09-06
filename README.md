@@ -40,10 +40,10 @@ license-manager-agent:
   rlmutil-path: "/usr/local/bin/rlmutil"
   lsdyna-path: "/usr/local/bin/lstc_qrun"
   lmxendutil-path: "/usr/local/bin/lmxendutil"
-  oicd-domain: "<domain-collected-from-oicd>"
-  oicd-audience: "<audience-for-oicd-api>"
-  oicd-client-id: "<client-id-for-oicd-app>"
-  oicd-client-secret: "<client-secret-for-oicd-app>"
+  oidc-domain: "<domain-collected-from-oidc>"
+  oidc-audience: "<audience-for-oidc-api>"
+  oidc-client-id: "<client-id-for-oidc-app>"
+  oidc-client-secret: "<client-secret-for-oidc-app>"
   deploy-env: "STAGING" # can be LOCAL or PROD as well
 ```
 
