@@ -14,6 +14,7 @@ Unreleased
 - add config option to define if reconciliation should run during Prolog/Epilog execution
 - add config option `timeout-interval` to terminate the service in case it hangs
 - add support to Fluentbit log forwarding
+- change OIDC configurations to support any kind of OIDC provider
 
 0.0.1 - 2021-11-10
 ------------------

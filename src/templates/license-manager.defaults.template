@@ -15,9 +15,9 @@ LM2_AGENT_LSDYNA_PATH={{ lsdyna_path }}
 LM2_AGENT_LMXENDUTIL_PATH={{ lmxendutil_path }}
 {% endif %}
 LM2_AGENT_USE_RECONCILE_IN_PROLOG_EPILOG={{ use_reconcile_in_prolog_epilog }}
-LM2_AGENT_AUTH0_DOMAIN={{ auth0_domain }}
-LM2_AGENT_AUTH0_AUDIENCE={{ auth0_audience }}
-LM2_AGENT_AUTH0_CLIENT_ID={{ auth0_client_id }}
-LM2_AGENT_AUTH0_CLIENT_SECRET={{ auth0_client_secret }}
+LM2_AGENT_OIDC_DOMAIN={{ oidc_domain }}
+LM2_AGENT_OIDC_AUDIENCE={{ oidc_audience }}
+LM2_AGENT_OIDC_CLIENT_ID={{ oidc_client_id }}
+LM2_AGENT_OIDC_CLIENT_SECRET={{ oidc_client_secret }}
 LM2_AGENT_CACHE_DIR=/var/cache/license-manager
 LM2_AGENT_DEPLOY_ENV={{ deploy_env }}

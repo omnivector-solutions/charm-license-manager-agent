@@ -40,10 +40,10 @@ license-manager-agent:
   rlmutil-path: "/usr/local/bin/rlmutil"
   lsdyna-path: "/usr/local/bin/lstc_qrun"
   lmxendutil-path: "/usr/local/bin/lmxendutil"
-  auth0-domain: "<domain-collected-from-auth0>"
-  auth0-audience: "<audience-for-auth0-api>"
-  auth0-client-id: "<client-id-for-auth0-app>"
-  auth0-client-secret: "<client-secret-for-auth0-app>"
+  oidc-domain: "<domain-collected-from-oidc>"
+  oidc-audience: "<audience-for-oidc-api>"
+  oidc-client-id: "<client-id-for-oidc-app>"
+  oidc-client-secret: "<client-secret-for-oidc-app>"
   deploy-env: "STAGING" # can be LOCAL or PROD as well
 ```
 

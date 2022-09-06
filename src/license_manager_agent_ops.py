@@ -163,10 +163,10 @@ class LicenseManagerAgentOps:
         rlmutil_path = charm_config.get("rlmutil-path")
         lsdyna_path = charm_config.get("lsdyna-path")
         lmxendutil_path = charm_config.get("lmxendutil-path")
-        auth0_domain = charm_config.get("auth0-domain")
-        auth0_audience = charm_config.get("auth0-audience")
-        auth0_client_id = charm_config.get("auth0-client-id")
-        auth0_client_secret = charm_config.get("auth0-client-secret")
+        oidc_domain = charm_config.get("oidc-domain")
+        oidc_audience = charm_config.get("oidc-audience")
+        oidc_client_id = charm_config.get("oidc-client-id")
+        oidc_client_secret = charm_config.get("oidc-client-secret")
         use_reconcile_in_prolog_epilog = charm_config.get("use-reconcile-in-prolog-epilog")
         deploy_env = charm_config.get("deploy-env")
 
@@ -181,10 +181,10 @@ class LicenseManagerAgentOps:
             "rlmutil_path": rlmutil_path,
             "lsdyna_path": lsdyna_path,
             "lmxendutil_path": lmxendutil_path,
-            "auth0_domain": auth0_domain,
-            "auth0_audience": auth0_audience,
-            "auth0_client_id": auth0_client_id,
-            "auth0_client_secret": auth0_client_secret,
+            "oidc_domain": oidc_domain,
+            "oidc_audience": oidc_audience,
+            "oidc_client_id": oidc_client_id,
+            "oidc_client_secret": oidc_client_secret,
             "use_reconcile_in_prolog_epilog": use_reconcile_in_prolog_epilog,
             "deploy_env": deploy_env,
         }
