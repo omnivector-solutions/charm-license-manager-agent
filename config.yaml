@@ -64,26 +64,26 @@ options:
     default: True
     description: |
       Flags if reconciliation should be triggered when running Prolog/Epilog scripts. Defaults to true.
-  auth0-domain:
+  oicd-domain:
     type: string
     default:
     description: |
-      Domain for the Auth0 API where auth tokens will be fetched.
-  auth0-audience:
+      Domain for the OICD provider API where auth tokens will be fetched.
+  oicd-audience:
     type: string
     default:
     description: |
-      Audience for the Auth0 issued tokens.
-  auth0-client-id:
+      Audience for the OICD provider issued tokens.
+  oicd-client-id:
     type: string
     default:
     description: |
-      The ID for the Auth0 app client to which tokens will be issued.
-  auth0-client-secret:
+      The ID for the OICD provider app client to which tokens will be issued.
+  oicd-client-secret:
     type: string
     default:
     description: |
-      The secret key for the Auth0 app client to which tokens will be issued.
+      The secret key for the OICD provider app client to which tokens will be issued.
   deploy-env:
     type: string
     default: STAGING
