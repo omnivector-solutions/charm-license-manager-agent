@@ -32,9 +32,6 @@ Create a text file `license-manager-agent.yaml` with this content:
 license-manager-agent:
   log-level: DEBUG
   stat-interval: 60
-  pypi-url: "https://pypicloud.omnivector.solutions"
-  pypi-username: "<pypi-username>"
-  pypi-password: "<pypi-password>"
   license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
   lmutil-path: "/usr/local/bin/lmutil"
   rlmutil-path: "/usr/local/bin/rlmutil"

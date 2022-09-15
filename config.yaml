@@ -19,21 +19,6 @@ options:
     default: 30
     description: |
       Interval (in seconds) at which the agent service will be killed if not finished.
-  pypi-url:
-    type: string
-    default:
-    description: |
-      PYPI URL with the protocol, e.g. `https://pypicloud.example.com`.
-  pypi-username:
-    type: string
-    default:
-    description: |
-      PYPI USERNAME.
-  pypi-password:
-    type: string
-    default:
-    description: |
-      PYPI PASSWORD in plain text.
   sentry-dsn:
     type: string
     default: ""

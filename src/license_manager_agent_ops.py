@@ -1,5 +1,4 @@
 """LicenseManagerAgentOps."""
-import os
 import logging
 import shutil
 import subprocess
@@ -35,21 +34,12 @@ class LicenseManagerAgentOps:
         """Initialize license-manager-agent-ops."""
         self._charm = charm
 
-    def _derived_pypi_url(self):
-        url = self._charm.model.config["pypi-url"]
-        url = url.split("://")[1]
-        pypi_username = self._charm.model.config["pypi-username"]
-        pypi_password = self._charm.model.config["pypi-password"]
-        return (f"https://{pypi_username}:{pypi_password}@"
-                f"{url}/simple/{self._PACKAGE_NAME}")
-
     def setup_cache_dir(self):
         cache_dir = Path("/var/cache/license-manager")
         if not cache_dir.exists():
             cache_dir.mkdir()
             shutil.chown(cache_dir, user="slurm")
             cache_dir.chmod(0o700)
-
 
     def install(self):
         """Install license-manager-agent and setup ops."""
@@ -81,8 +71,6 @@ class LicenseManagerAgentOps:
         pip_install_cmd = [
             self._PIP_CMD,
             "install",
-            "-f",
-            self._derived_pypi_url(),
             self._PACKAGE_NAME,
         ]
         logger.debug(f"## Running: {pip_install_cmd}")
@@ -137,8 +125,6 @@ class LicenseManagerAgentOps:
             self._PIP_CMD,
             "install",
             "--upgrade",
-            "-f",
-            self._derived_pypi_url(),
             f"{self._PACKAGE_NAME}=={version}",
         ]
 
