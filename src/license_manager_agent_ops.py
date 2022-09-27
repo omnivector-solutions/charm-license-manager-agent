@@ -26,7 +26,6 @@ class LicenseManagerAgentOps:
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
     PROLOG_PATH = _VENV_DIR / "bin/slurmctld_prolog"
     EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
-    _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
     _SLURM_USER = "slurm"
     _SLURM_GROUP = "slurm"
 
@@ -61,7 +60,9 @@ class LicenseManagerAgentOps:
 
         # Ensure we have the latest pip
         upgrade_pip_cmd = [
-            self._PIP_CMD,
+            self._PYTHON_BIN.as_posix(),
+            "-m",
+            "pip",
             "install",
             "--upgrade",
             "pip",
@@ -69,7 +70,9 @@ class LicenseManagerAgentOps:
         subprocess.call(upgrade_pip_cmd)
 
         pip_install_cmd = [
-            self._PIP_CMD,
+            self._PYTHON_BIN.as_posix(),
+            "-m",
+            "pip",
             "install",
             self._PACKAGE_NAME,
         ]
@@ -122,7 +125,9 @@ class LicenseManagerAgentOps:
         self.license_manager_agent_systemctl("stop")
 
         pip_install_cmd = [
-            self._PIP_CMD,
+            self._PYTHON_BIN.as_posix(),
+            "-m",
+            "pip",
             "install",
             "--upgrade",
             f"{self._PACKAGE_NAME}=={version}",
