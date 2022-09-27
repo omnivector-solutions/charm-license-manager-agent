@@ -24,6 +24,7 @@ class LicenseManagerAgentOps:
     _SYSTEMD_TIMER_NAME = "license-manager-agent.timer"
     _SYSTEMD_TIMER_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_TIMER_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
+    _VENV_PYTHON = _VENV_DIR.joinpath("bin", "python").as_posix()
     PROLOG_PATH = _VENV_DIR / "bin/slurmctld_prolog"
     EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
     _SLURM_USER = "slurm"
@@ -58,9 +59,18 @@ class LicenseManagerAgentOps:
         subprocess.call(create_venv_cmd)
         logger.debug("license-manager-agent virtualenv created")
 
+        # Ensure pip
+        ensure_pip_cmd = [
+            self._VENV_PYTHON,
+            "-m",
+            "ensurepip",
+        ]
+        subprocess.call(ensure_pip_cmd)
+        logger.debug("pip ensured")
+
         # Ensure we have the latest pip
         upgrade_pip_cmd = [
-            self._PYTHON_BIN.as_posix(),
+            self._VENV_PYTHON,
             "-m",
             "pip",
             "install",
@@ -70,7 +80,7 @@ class LicenseManagerAgentOps:
         subprocess.call(upgrade_pip_cmd)
 
         pip_install_cmd = [
-            self._PYTHON_BIN.as_posix(),
+            self._VENV_PYTHON,
             "-m",
             "pip",
             "install",
@@ -125,7 +135,7 @@ class LicenseManagerAgentOps:
         self.license_manager_agent_systemctl("stop")
 
         pip_install_cmd = [
-            self._PYTHON_BIN.as_posix(),
+            self._VENV_PYTHON,
             "-m",
             "pip",
             "install",
@@ -158,7 +168,9 @@ class LicenseManagerAgentOps:
         oidc_audience = charm_config.get("oidc-audience")
         oidc_client_id = charm_config.get("oidc-client-id")
         oidc_client_secret = charm_config.get("oidc-client-secret")
-        use_reconcile_in_prolog_epilog = charm_config.get("use-reconcile-in-prolog-epilog")
+        use_reconcile_in_prolog_epilog = charm_config.get(
+            "use-reconcile-in-prolog-epilog"
+        )
         deploy_env = charm_config.get("deploy-env")
 
         log_base_dir = str(self._LOG_DIR)
