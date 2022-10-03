@@ -1,5 +1,4 @@
 """LicenseManagerAgentOps."""
-import os
 import logging
 import shutil
 import subprocess
@@ -25,9 +24,9 @@ class LicenseManagerAgentOps:
     _SYSTEMD_TIMER_NAME = "license-manager-agent.timer"
     _SYSTEMD_TIMER_FILE = _SYSTEMD_BASE_PATH / _SYSTEMD_TIMER_NAME
     _VENV_DIR = Path("/srv/license-manager-agent-venv")
+    _VENV_PYTHON = _VENV_DIR.joinpath("bin", "python").as_posix()
     PROLOG_PATH = _VENV_DIR / "bin/slurmctld_prolog"
     EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
-    _PIP_CMD = _VENV_DIR.joinpath("bin", "pip3.8").as_posix()
     _SLURM_USER = "slurm"
     _SLURM_GROUP = "slurm"
 
@@ -35,21 +34,12 @@ class LicenseManagerAgentOps:
         """Initialize license-manager-agent-ops."""
         self._charm = charm
 
-    def _derived_pypi_url(self):
-        url = self._charm.model.config["pypi-url"]
-        url = url.split("://")[1]
-        pypi_username = self._charm.model.config["pypi-username"]
-        pypi_password = self._charm.model.config["pypi-password"]
-        return (f"https://{pypi_username}:{pypi_password}@"
-                f"{url}/simple/{self._PACKAGE_NAME}")
-
     def setup_cache_dir(self):
         cache_dir = Path("/var/cache/license-manager")
         if not cache_dir.exists():
             cache_dir.mkdir()
             shutil.chown(cache_dir, user="slurm")
             cache_dir.chmod(0o700)
-
 
     def install(self):
         """Install license-manager-agent and setup ops."""
@@ -69,9 +59,20 @@ class LicenseManagerAgentOps:
         subprocess.call(create_venv_cmd)
         logger.debug("license-manager-agent virtualenv created")
 
+        # Ensure pip
+        ensure_pip_cmd = [
+            self._VENV_PYTHON,
+            "-m",
+            "ensurepip",
+        ]
+        subprocess.call(ensure_pip_cmd)
+        logger.debug("pip ensured")
+
         # Ensure we have the latest pip
         upgrade_pip_cmd = [
-            self._PIP_CMD,
+            self._VENV_PYTHON,
+            "-m",
+            "pip",
             "install",
             "--upgrade",
             "pip",
@@ -79,10 +80,10 @@ class LicenseManagerAgentOps:
         subprocess.call(upgrade_pip_cmd)
 
         pip_install_cmd = [
-            self._PIP_CMD,
+            self._VENV_PYTHON,
+            "-m",
+            "pip",
             "install",
-            "-f",
-            self._derived_pypi_url(),
             self._PACKAGE_NAME,
         ]
         logger.debug(f"## Running: {pip_install_cmd}")
@@ -134,11 +135,11 @@ class LicenseManagerAgentOps:
         self.license_manager_agent_systemctl("stop")
 
         pip_install_cmd = [
-            self._PIP_CMD,
+            self._VENV_PYTHON,
+            "-m",
+            "pip",
             "install",
             "--upgrade",
-            "-f",
-            self._derived_pypi_url(),
             f"{self._PACKAGE_NAME}=={version}",
         ]
 
@@ -167,7 +168,9 @@ class LicenseManagerAgentOps:
         oidc_audience = charm_config.get("oidc-audience")
         oidc_client_id = charm_config.get("oidc-client-id")
         oidc_client_secret = charm_config.get("oidc-client-secret")
-        use_reconcile_in_prolog_epilog = charm_config.get("use-reconcile-in-prolog-epilog")
+        use_reconcile_in_prolog_epilog = charm_config.get(
+            "use-reconcile-in-prolog-epilog"
+        )
         deploy_env = charm_config.get("deploy-env")
 
         log_base_dir = str(self._LOG_DIR)
