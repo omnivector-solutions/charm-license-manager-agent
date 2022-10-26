@@ -40,9 +40,15 @@ class LicenseManagerAgentOps:
 
         # Delete cache dir if it already exists
         if CACHE_DIR.exists():
+            logger.debug(f"Clearing cache dir {CACHE_DIR.as_posix()}")
             rmtree(CACHE_DIR, ignore_errors=True)
+        else:
+            logger.debug(
+                f"Tried to clean cache dir {CACHE_DIR.as_posix()}, but it does not exist"
+            )
 
         # Create a clean cache dir
+        logger.debug(f"Creating a clean cache dir {CACHE_DIR.as_posix()}")
         CACHE_DIR.mkdir(parents=True)
         chown(CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
         CACHE_DIR.chmod(0o700)
