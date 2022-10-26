@@ -31,7 +31,7 @@ class LicenseManagerAgentCharm(CharmBase):
             init_started=False,
         )
 
-        self._prolog_epilog = PrologEpilog(self, 'prolog-epilog')
+        self._prolog_epilog = PrologEpilog(self, "prolog-epilog")
 
         self._license_manager_agent_ops = LicenseManagerAgentOps(self)
 
@@ -42,7 +42,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self.on.start: self._on_start,
             self.on.config_changed: self._on_config_changed,
             self.on.remove: self._on_remove,
-            self.on.upgrade_to_latest_action: self._upgrade_to_latest,
+            self.on.upgrade_action: self._on_upgrade_action,
             self.on["fluentbit"].relation_created: self._on_fluentbit_relation_created,
         }
         for event, handler in event_handler_bindings.items():
@@ -87,7 +87,7 @@ class LicenseManagerAgentCharm(CharmBase):
         self._license_manager_agent_ops.license_manager_agent_systemctl("stop")
         self._license_manager_agent_ops.remove_license_manager_agent()
 
-    def _upgrade_to_latest(self, event):
+    def _on_upgrade_action(self, event):
         version = event.params["version"]
         self._license_manager_agent_ops.upgrade(version)
 
