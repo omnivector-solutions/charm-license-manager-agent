@@ -35,11 +35,17 @@ class LicenseManagerAgentOps:
         self._charm = charm
 
     def setup_cache_dir(self):
-        cache_dir = Path("/var/cache/license-manager")
-        if not cache_dir.exists():
-            cache_dir.mkdir()
-            shutil.chown(cache_dir, user="slurm")
-            cache_dir.chmod(0o700)
+        """Set up cache dir."""
+        CACHE_DIR = Path("/var/cache/license-manager")
+
+        # Delete cache dir if it already exists
+        if CACHE_DIR.exists():
+            rmtree(CACHE_DIR, ignore_errors=True)
+
+        # Create a clean cache dir
+        CACHE_DIR.mkdir(parents=True)
+        chown(CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
+        CACHE_DIR.chmod(0o700)
 
     def install(self):
         """Install license-manager-agent and setup ops."""
@@ -99,6 +105,7 @@ class LicenseManagerAgentOps:
         copy2("./src/templates/slurmctld_prolog.sh", self.PROLOG_PATH)
         copy2("./src/templates/slurmctld_epilog.sh", self.EPILOG_PATH)
 
+        # Setup cache dir
         self.setup_cache_dir()
         self.setup_systemd_service()
         # Enable the systemd timer
@@ -151,6 +158,9 @@ class LicenseManagerAgentOps:
             logger.debug("license-manager-agent installed")
             # Start license-manager-agent
             self.license_manager_agent_systemctl("start")
+
+        # Clear cache dir after upgrade to avoid stale data
+        self.setup_cache_dir()
 
     def configure_etc_default(self):
         """Get the needed config, render and write out the file."""
