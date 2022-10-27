@@ -7,7 +7,7 @@ lint: ## Run linter
 	flake8 src/
 
 version: ## Create/update version file
-	@git describe --dirty --tags > version
+	@git describe --tags --dirty --always > version
 
 .PHONY: clean
 clean: ## Remove build dirs, temp files, and charms
