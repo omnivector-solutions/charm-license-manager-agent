@@ -1,12 +1,10 @@
 """LicenseManagerAgentOps."""
 import logging
-import shutil
 import subprocess
 from pathlib import Path
-from shutil import copy2, rmtree, chown
+from shutil import chown, copy2, rmtree
 
 from jinja2 import Environment, FileSystemLoader
-
 
 logger = logging.getLogger()
 
@@ -259,13 +257,28 @@ class LicenseManagerAgentOps:
     @property
     def fluentbit_config_lm_log(self) -> list:
         """Return Fluentbit configuration parameters to forward LM agent logs."""
-        cfg = [{"input": [("name",             "tail"),
-                          ("path",             "/var/log/license-manager-agent/*.log"),
-                          ("tag",              "lm.*"),
-                          ("multiline.parser", "multiline-lm")]},
-               {"multiline_parser": [("name",          "multiline-lm"),
-                                     ("type",          "regex"),
-                                     ("flush_timeout", "1000"),
-                                     ("rule",          '"start_state"', '"/^\[(\d+(\-)?){3} (\d+(\:)?){3},\d+\;\w+\] .+/"', '"cont"'), # noqa
-                                     ("rule",          '"cont"',        '"/^([^\[].*)/"',             '"cont"')]}] # noqa
+        cfg = [
+            {
+                "input": [
+                    ("name", "tail"),
+                    ("path", "/var/log/license-manager-agent/*.log"),
+                    ("tag", "lm.*"),
+                    ("multiline.parser", "multiline-lm"),
+                ]
+            },
+            {
+                "multiline_parser": [
+                    ("name", "multiline-lm"),
+                    ("type", "regex"),
+                    ("flush_timeout", "1000"),
+                    (
+                        "rule",
+                        '"start_state"',
+                        '"/^\[(\d+(\-)?){3} (\d+(\:)?){3},\d+\;\w+\] .+/"',
+                        '"cont"',
+                    ),  # noqa
+                    ("rule", '"cont"', '"/^([^\[].*)/"', '"cont"'),
+                ]
+            },
+        ]  # noqa
         return cfg
