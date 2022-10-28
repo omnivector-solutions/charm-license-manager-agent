@@ -220,6 +220,9 @@ class LicenseManagerAgentOps:
 
         self._ETC_DEFAULT.write_text(rendered_template)
 
+        # Clear cache dir after upgrade to avoid stale data
+        self.setup_cache_dir()
+
     def license_manager_agent_systemctl(self, operation: str):
         """Run license-manager-agent systemctl command."""
 
