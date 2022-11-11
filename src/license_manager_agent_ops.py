@@ -164,6 +164,7 @@ class LicenseManagerAgentOps:
         rlmutil_path = charm_config.get("rlmutil-path")
         lsdyna_path = charm_config.get("lsdyna-path")
         lmxendutil_path = charm_config.get("lmxendutil-path")
+        olixtool_path = charm_config.get("olixtool-path")
         oidc_domain = charm_config.get("oidc-domain")
         oidc_audience = charm_config.get("oidc-audience")
         oidc_client_id = charm_config.get("oidc-client-id")
@@ -184,6 +185,7 @@ class LicenseManagerAgentOps:
             "rlmutil_path": rlmutil_path,
             "lsdyna_path": lsdyna_path,
             "lmxendutil_path": lmxendutil_path,
+            "olixtool_path": olixtool_path,
             "oidc_domain": oidc_domain,
             "oidc_audience": oidc_audience,
             "oidc_client_id": oidc_client_id,

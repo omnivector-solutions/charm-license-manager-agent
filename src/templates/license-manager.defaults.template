@@ -14,6 +14,9 @@ LM2_AGENT_LSDYNA_PATH={{ lsdyna_path }}
 {% if lmxendutil_path %}
 LM2_AGENT_LMXENDUTIL_PATH={{ lmxendutil_path }}
 {% endif %}
+{% if olixtool_path %}
+LM2_AGENT_OLIXTOOL_PATH={{ olixtool_path }}
+{% endif %}
 LM2_AGENT_USE_RECONCILE_IN_PROLOG_EPILOG={{ use_reconcile_in_prolog_epilog }}
 LM2_AGENT_OIDC_DOMAIN={{ oidc_domain }}
 LM2_AGENT_OIDC_AUDIENCE={{ oidc_audience }}

@@ -28,12 +28,12 @@ options:
     type: string
     default:
     description: |
-      Path to the lmutil binary. Leave blank if not needed.
+      Path to the FlexLM binary. Leave blank if not needed.
   rlmutil-path:
     type: string
     default:
     description: |
-      Path to the rlmutil binary. Leave blank if not needed.
+      Path to the RLM binary. Leave blank if not needed.
   lsdyna-path:
     type: string
     default:
@@ -44,6 +44,11 @@ options:
     default:
     description: |
       Path to the LM-X binary. Leave blank if not needed.
+  olixtool-path:
+    type: string
+    default:
+    description: |
+      Path to the OLicense binary. Leave blank if not needed.
   use-reconcile-in-prolog-epilog:
     type: boolean
     default: True
