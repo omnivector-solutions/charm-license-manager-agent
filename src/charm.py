@@ -98,11 +98,11 @@ class LicenseManagerAgentCharm(CharmBase):
         try:
             self._license_manager_agent_ops.upgrade(version)
             event.set_results({"upgrade": "success"})
+            self.unit.status = ActiveStatus(f"Updated to version {version}")
             self._license_manager_agent_ops.restart_license_manager_agent()
         except Exception:
-            self.unit.status = BlockedStatus("Error upgrading license-manager-agent")
-            event.fail(message="Error upgrading license-manager-agent")
-            event.defer()
+            self.unit.status = BlockedStatus(f"Error updating to version {version}")
+            event.fail()
 
     def _on_fluentbit_relation_created(self, event):
         """Set up Fluentbit log forwarding."""
