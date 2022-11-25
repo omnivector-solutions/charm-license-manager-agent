@@ -31,7 +31,7 @@ class LicenseManagerAgentCharm(CharmBase):
             init_started=False,
         )
 
-        self._prolog_epilog = PrologEpilog(self, 'prolog-epilog')
+        self._prolog_epilog = PrologEpilog(self, "prolog-epilog")
 
         self._license_manager_agent_ops = LicenseManagerAgentOps(self)
 
@@ -42,7 +42,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self.on.start: self._on_start,
             self.on.config_changed: self._on_config_changed,
             self.on.remove: self._on_remove,
-            self.on.upgrade_to_latest_action: self._upgrade_to_latest,
+            self.on.upgrade_action: self._on_upgrade_action,
             self.on["fluentbit"].relation_created: self._on_fluentbit_relation_created,
         }
         for event, handler in event_handler_bindings.items():
@@ -50,6 +50,8 @@ class LicenseManagerAgentCharm(CharmBase):
 
     def _on_install(self, event):
         """Install license-manager-agent."""
+        self.unit.set_workload_version(Path("version").read_text().strip())
+
         try:
             self._license_manager_agent_ops.install()
         except Exception as e:
@@ -64,6 +66,10 @@ class LicenseManagerAgentCharm(CharmBase):
         logger.debug("license-manager agent installed")
         self.unit.status = ActiveStatus("license-manager-agent installed")
         self._stored.installed = True
+
+    def _on_upgrade(self, event):
+        """Perform upgrade operations."""
+        self.unit.set_workload_version(Path("version").read_text().strip())
 
     def _on_start(self, event):
         """Start the license-manager-agent service."""
@@ -87,9 +93,16 @@ class LicenseManagerAgentCharm(CharmBase):
         self._license_manager_agent_ops.license_manager_agent_systemctl("stop")
         self._license_manager_agent_ops.remove_license_manager_agent()
 
-    def _upgrade_to_latest(self, event):
+    def _on_upgrade_action(self, event):
         version = event.params["version"]
-        self._license_manager_agent_ops.upgrade(version)
+        try:
+            self._license_manager_agent_ops.upgrade(version)
+            event.set_results({"upgrade": "success"})
+            self.unit.status = ActiveStatus(f"Updated to version {version}")
+            self._license_manager_agent_ops.restart_license_manager_agent()
+        except Exception:
+            self.unit.status = BlockedStatus(f"Error updating to version {version}")
+            event.fail()
 
     def _on_fluentbit_relation_created(self, event):
         """Set up Fluentbit log forwarding."""

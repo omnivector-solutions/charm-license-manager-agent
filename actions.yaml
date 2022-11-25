@@ -1,6 +1,6 @@
-upgrade-to-latest:
+upgrade:
   description: >
-    Upgrade license manager to the latest release.
+    Upgrade license manager agent.
   params:
     version:
       type: string
