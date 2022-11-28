@@ -154,10 +154,10 @@ class LicenseManagerAgentOps:
             f"{self._PACKAGE_NAME}=={version}",
         ]
 
-        out = subprocess.check_output(pip_install_cmd).decode().strip()
+        out = subprocess.check_output(pip_install_cmd, env={}).decode().strip()
+
         if "Successfully installed" not in out:
             logger.error("Trouble upgrading license-manager, please debug")
-            raise Exception("License manager not installed.")
         else:
             logger.debug("license-manager-agent installed")
             # Start license-manager-agent
