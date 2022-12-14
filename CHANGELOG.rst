@@ -6,6 +6,7 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
+* Add an action to show the version of license-manager-agent. 
 * Fix command to reload systemd settings when installing
 * Add config options to set the path to rlmutil (RLM binary) and lmutil (FlexLM binary)
 * Add config options to set the path for lsdyna (LS-Dyna binary)
