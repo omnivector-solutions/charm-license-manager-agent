@@ -43,6 +43,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self.on.config_changed: self._on_config_changed,
             self.on.remove: self._on_remove,
             self.on.upgrade_action: self._on_upgrade_action,
+            self.on.show_version_action: self._on_show_version_action,
             self.on["fluentbit"].relation_created: self._on_fluentbit_relation_created,
         }
         for event, handler in event_handler_bindings.items():
@@ -70,6 +71,11 @@ class LicenseManagerAgentCharm(CharmBase):
     def _on_upgrade(self, event):
         """Perform upgrade operations."""
         self.unit.set_workload_version(Path("version").read_text().strip())
+
+    def _on_show_version_action(self, event):
+        """Show the info and version of license-manager-agent."""
+        info = self._license_manager_agent_ops.get_version_info()
+        event.set_results({"license-manager-agent": info})
 
     def _on_start(self, event):
         """Start the license-manager-agent service."""

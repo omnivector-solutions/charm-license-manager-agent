@@ -7,3 +7,7 @@ upgrade:
       description: Version of license-manager to upgrade to.
   required:
     - version
+
+show-version:
+  description: >
+    Display the version and information about license-manager-agent.
