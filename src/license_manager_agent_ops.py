@@ -166,6 +166,20 @@ class LicenseManagerAgentOps:
         # Clear cache dir after upgrade to avoid stale data
         self.setup_cache_dir()
 
+    def get_version_info(self):
+        """Show version and info about license-manager-agent."""
+        cmd = [
+            self._VENV_PYTHON,
+            "-m",
+            "pip",
+            "show",
+            self._PACKAGE_NAME
+        ]
+
+        out = subprocess.check_output(cmd, env={}).decode().strip()
+
+        return out
+
     def configure_etc_default(self):
         """Get the needed config, render and write out the file."""
         charm_config = self._charm.model.config
