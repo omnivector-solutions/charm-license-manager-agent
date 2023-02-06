@@ -54,6 +54,44 @@ class LicenseManagerAgentOps:
     def install(self):
         """Install license-manager-agent and setup ops."""
 
+        license_manager_user = charm_config.get("license-manager-user")
+
+        # Create the license-manager-agent user
+        useradd_cmd = [
+            "adduser",
+            "--system",
+            "--no-create-home",
+            "license-manager",
+        ]
+        subprocess.call(useradd_cmd)
+        logger.debug(f"license-manager-agent user created")
+
+        # Create the Slurm account for License Manager
+        create_account_cmd = [
+            "sacctmgr",
+            "add",
+            "account",
+            "license-manager",
+            "Description=License Manager reservations account",
+            "-i",
+        ]
+        subprocess.call(create_account_cmd)
+        logger.debug(f"license-manager-agent account created")
+        
+        # Add license-manager-agent user to License Manager account
+        # Operator level ensures they can create reservations
+        add_to_account_cmd = [
+            "sacctmgr",
+            "add",
+            "user",
+            "license-manager",
+            f"Account=license-manager",
+            "AdminLevel=Operator",
+            "-i",
+        ]
+        subprocess.call(add_to_account_cmd)
+        logger.debug(f"license-manager-agent user added to account with operator admin level")
+
         # Create log dir
         if not self._LOG_DIR.exists():
             self._LOG_DIR.mkdir(parents=True)
@@ -200,6 +238,8 @@ class LicenseManagerAgentOps:
         use_reconcile_in_prolog_epilog = charm_config.get(
             "use-reconcile-in-prolog-epilog"
         )
+        license_manager_user = charm_config.get("license-manager-user")
+        reservation_identifier = charm_config.get("reservation-identifier")
         deploy_env = charm_config.get("deploy-env")
 
         log_base_dir = str(self._LOG_DIR)
@@ -219,6 +259,8 @@ class LicenseManagerAgentOps:
             "oidc_client_id": oidc_client_id,
             "oidc_client_secret": oidc_client_secret,
             "use_reconcile_in_prolog_epilog": use_reconcile_in_prolog_epilog,
+            "license_manager_user": license_manager_user,
+            "reservation_identifier": reservation_identifier,
             "deploy_env": deploy_env,
         }
 
