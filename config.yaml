@@ -74,16 +74,6 @@ options:
     default:
     description: |
       The secret key for the OIDC provider app client to which tokens will be issued.
-  license-manager-user:
-    type: string
-    default: license-manager
-    description: |
-      The user that License Manager service will run as.
-  reservation-identifier:
-    type: string
-    default: license-manager-reservation
-    description: |
-      The identifier for the license reservation managed by License Manager.
   deploy-env:
     type: string
     default: STAGING
