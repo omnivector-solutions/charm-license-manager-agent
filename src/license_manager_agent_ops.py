@@ -238,8 +238,6 @@ class LicenseManagerAgentOps:
         use_reconcile_in_prolog_epilog = charm_config.get(
             "use-reconcile-in-prolog-epilog"
         )
-        license_manager_user = charm_config.get("license-manager-user")
-        reservation_identifier = charm_config.get("reservation-identifier")
         deploy_env = charm_config.get("deploy-env")
 
         log_base_dir = str(self._LOG_DIR)
