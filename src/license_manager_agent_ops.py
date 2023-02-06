@@ -54,8 +54,6 @@ class LicenseManagerAgentOps:
     def install(self):
         """Install license-manager-agent and setup ops."""
 
-        license_manager_user = charm_config.get("license-manager-user")
-
         # Create the license-manager-agent user
         useradd_cmd = [
             "adduser",
