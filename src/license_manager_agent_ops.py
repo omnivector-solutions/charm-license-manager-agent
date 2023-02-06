@@ -255,8 +255,6 @@ class LicenseManagerAgentOps:
             "oidc_client_id": oidc_client_id,
             "oidc_client_secret": oidc_client_secret,
             "use_reconcile_in_prolog_epilog": use_reconcile_in_prolog_epilog,
-            "license_manager_user": license_manager_user,
-            "reservation_identifier": reservation_identifier,
             "deploy_env": deploy_env,
         }
 
