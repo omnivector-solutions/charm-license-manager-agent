@@ -54,6 +54,42 @@ class LicenseManagerAgentOps:
     def install(self):
         """Install license-manager-agent and setup ops."""
 
+        # Create the license-manager-agent user
+        useradd_cmd = [
+            "adduser",
+            "--system",
+            "--no-create-home",
+            "license-manager",
+        ]
+        subprocess.call(useradd_cmd)
+        logger.debug(f"license-manager-agent user created")
+
+        # Create the Slurm account for License Manager
+        create_account_cmd = [
+            "sacctmgr",
+            "add",
+            "account",
+            "license-manager",
+            "Description=License Manager reservations account",
+            "-i",
+        ]
+        subprocess.call(create_account_cmd)
+        logger.debug(f"license-manager-agent account created")
+        
+        # Add license-manager-agent user to License Manager account
+        # Operator level ensures they can create reservations
+        add_to_account_cmd = [
+            "sacctmgr",
+            "add",
+            "user",
+            "license-manager",
+            f"Account=license-manager",
+            "AdminLevel=Operator",
+            "-i",
+        ]
+        subprocess.call(add_to_account_cmd)
+        logger.debug(f"license-manager-agent user added to account with operator admin level")
+
         # Create log dir
         if not self._LOG_DIR.exists():
             self._LOG_DIR.mkdir(parents=True)
@@ -269,6 +305,31 @@ class LicenseManagerAgentOps:
             self._ETC_DEFAULT.unlink()
         rmtree(self._LOG_DIR.as_posix(), ignore_errors=True)
         rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
+
+        # Remove the agent user from the License Manager Slurm account
+        remove_account_cmd = [
+            "sacctmgr",
+            "remove",
+            "user"
+            "where",
+            "user=license-manager",
+            "account=license-manager",
+            "-i",
+        ]
+        subprocess.call(remove_account_cmd)
+
+        # Remove the License Manager Slurm account
+        remove_account_cmd = [
+            "sacctmgr",
+            "remove",
+            "account",
+            "license-manager",
+            "-i"
+        ]
+        subprocess.call(remove_account_cmd)
+
+        # Remove the agent user
+        subprocess.call(["userdel", "license-manager"])
 
     @property
     def fluentbit_config_lm_log(self) -> list:
