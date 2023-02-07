@@ -306,6 +306,31 @@ class LicenseManagerAgentOps:
         rmtree(self._LOG_DIR.as_posix(), ignore_errors=True)
         rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
 
+        # Remove the agent user from the License Manager Slurm account
+        remove_account_cmd = [
+            "sacctmgr",
+            "remove",
+            "user"
+            "where",
+            "user=license-manager",
+            "account=license-manager",
+            "-i",
+        ]
+        subprocess.call(remove_account_cmd)
+
+        # Remove the License Manager Slurm account
+        remove_account_cmd = [
+            "sacctmgr",
+            "remove",
+            "account",
+            "license-manager",
+            "-i"
+        ]
+        subprocess.call(remove_account_cmd)
+
+        # Remove the agent user
+        subprocess.call(["userdel", "license-manager"])
+
     @property
     def fluentbit_config_lm_log(self) -> list:
         """Return Fluentbit configuration parameters to forward LM agent logs."""
