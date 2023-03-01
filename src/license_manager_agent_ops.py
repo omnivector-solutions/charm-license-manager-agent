@@ -15,6 +15,7 @@ class LicenseManagerAgentOps:
     _PYTHON_BIN = Path("/usr/bin/python3.8")
     _PACKAGE_NAME = "license-manager-agent"
     _LOG_DIR = Path("/var/log/license-manager-agent")
+    _CACHE_DIR = Path("/var/cache/license-manager")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
     _SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
@@ -34,22 +35,20 @@ class LicenseManagerAgentOps:
 
     def setup_cache_dir(self):
         """Set up cache dir."""
-        CACHE_DIR = Path("/var/cache/license-manager")
-
         # Delete cache dir if it already exists
-        if CACHE_DIR.exists():
-            logger.debug(f"Clearing cache dir {CACHE_DIR.as_posix()}")
-            rmtree(CACHE_DIR, ignore_errors=True)
+        if self._CACHE_DIR.exists():
+            logger.debug(f"Clearing cache dir {self._CACHE_DIR.as_posix()}")
+            rmtree(self._CACHE_DIR, ignore_errors=True)
         else:
             logger.debug(
-                f"Tried to clean cache dir {CACHE_DIR.as_posix()}, but it does not exist"
+                f"Tried to clean cache dir {self._CACHE_DIR.as_posix()}, but it does not exist"
             )
 
         # Create a clean cache dir
-        logger.debug(f"Creating a clean cache dir {CACHE_DIR.as_posix()}")
-        CACHE_DIR.mkdir(parents=True)
-        chown(CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
-        CACHE_DIR.chmod(0o700)
+        logger.debug(f"Creating a clean cache dir {self._CACHE_DIR.as_posix()}")
+        self._CACHE_DIR.mkdir(parents=True)
+        chown(self._CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
+        self._CACHE_DIR.chmod(0o770)
 
     def install(self):
         """Install license-manager-agent and setup ops."""
