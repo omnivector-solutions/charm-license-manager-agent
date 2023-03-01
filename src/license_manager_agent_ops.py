@@ -44,7 +44,7 @@ class LicenseManagerAgentOps:
             rmtree(self._CACHE_DIR, ignore_errors=True)
         else:
             logger.debug(
-                f"Tried to clean cache dir {self._CACHE_DIR.as_posix()}, but it does not exist"
+                f"Searched for the cache directory {self._CACHE_DIR.as_posix()}, but it does not exist; skipping for its creation"
             )
 
         # Create a clean cache dir
