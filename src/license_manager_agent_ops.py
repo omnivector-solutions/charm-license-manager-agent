@@ -40,7 +40,7 @@ class LicenseManagerAgentOps:
         """Set up cache dir."""
         # Delete cache dir if it already exists
         if self._CACHE_DIR.exists():
-            logger.debug(f"Clearing cache dir {self._CACHE_DIR.as_posix()}")
+            logger.debug(f"The cache directory already exists. Clearing it: {self._CACHE_DIR.as_posix()}")
             rmtree(self._CACHE_DIR, ignore_errors=True)
         else:
             logger.debug(
