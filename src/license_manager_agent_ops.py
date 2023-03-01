@@ -98,7 +98,7 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "add",
             "account",
-            "license-manager",
+            _LICENSE_MANAGER_ACCOUNT,
             "Description=License Manager reservations account",
             "-i",
         ]
@@ -345,7 +345,7 @@ class LicenseManagerAgentOps:
         remove_user_cmd = [
             "sacctmgr",
             "remove",
-            "user"
+            "user",
             _LICENSE_MANAGER_USER,
             "-i",
         ]
