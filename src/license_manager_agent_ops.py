@@ -28,6 +28,9 @@ class LicenseManagerAgentOps:
     EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
     _SLURM_USER = "slurm"
     _SLURM_GROUP = "slurm"
+    _LICENSE_MANAGER_USER = "license-manager"
+    _LICENSE_MANAGER_ACCOUNT = "license-manager"
+
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
@@ -67,15 +70,28 @@ class LicenseManagerAgentOps:
         chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
         self._LOG_DIR.chmod(0o770)
 
+    def setup_license_manager_user(self):
+        """Set up license-manager user, account and group."""
         # Create the license-manager-agent user
         useradd_cmd = [
             "adduser",
             "--system",
             "--no-create-home",
-            "license-manager",
+            _LICENSE_MANAGER_USER,
         ]
         subprocess.call(useradd_cmd)
         logger.debug(f"license-manager-agent user created")
+
+        # Add user to slurm group
+        usermod_cmd = [
+            "usermod",
+            "-a",
+            "-G",
+            _SLURM_GROUP,
+            _LICENSE_MANAGER_USER,
+        ]
+        subprocess.call(usermod_cmd)
+        logger.debug(f"license-manager-agent user added to slurm group")
 
         # Create the Slurm account for License Manager
         create_account_cmd = [
@@ -95,8 +111,8 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "add",
             "user",
-            "license-manager",
-            f"Account=license-manager",
+            _LICENSE_MANAGER_USER,
+            f"Account={_LICENSE_MANAGER_ACCOUNT}",
             "AdminLevel=Operator",
             "-i",
         ]
@@ -161,7 +177,12 @@ class LicenseManagerAgentOps:
         # Setup log dir
         self.setup_log_dir()
 
+        # Setup license-manager user
+        self.setup_license_manager_user()
+
+        # Setup systemd service and timer
         self.setup_systemd_service()
+
         # Enable the systemd timer
         self.license_manager_agent_systemctl("enable")
 
