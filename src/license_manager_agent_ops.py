@@ -77,7 +77,7 @@ class LicenseManagerAgentOps:
             "adduser",
             "--system",
             "--no-create-home",
-            _LICENSE_MANAGER_USER,
+            self._LICENSE_MANAGER_USER,
         ]
         subprocess.call(useradd_cmd)
         logger.debug(f"license-manager-agent user created")
@@ -87,8 +87,8 @@ class LicenseManagerAgentOps:
             "usermod",
             "-a",
             "-G",
-            _SLURM_GROUP,
-            _LICENSE_MANAGER_USER,
+            self._SLURM_GROUP,
+            self._LICENSE_MANAGER_USER,
         ]
         subprocess.call(usermod_cmd)
         logger.debug(f"license-manager-agent user added to slurm group")
@@ -98,7 +98,7 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "add",
             "account",
-            _LICENSE_MANAGER_ACCOUNT,
+            self._LICENSE_MANAGER_ACCOUNT,
             "Description=License Manager reservations account",
             "-i",
         ]
@@ -111,8 +111,8 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "add",
             "user",
-            _LICENSE_MANAGER_USER,
-            f"Account={_LICENSE_MANAGER_ACCOUNT}",
+            self._LICENSE_MANAGER_USER,
+            f"Account={self._LICENSE_MANAGER_ACCOUNT}",
             "AdminLevel=Operator",
             "-i",
         ]
@@ -346,7 +346,7 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "remove",
             "user",
-            _LICENSE_MANAGER_USER,
+            self._LICENSE_MANAGER_USER,
             "-i",
         ]
         subprocess.call(remove_user_cmd)
@@ -356,13 +356,13 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "remove",
             "account",
-            _LICENSE_MANAGER_ACCOUNT,
+            self._LICENSE_MANAGER_ACCOUNT,
             "-i"
         ]
         subprocess.call(remove_account_cmd)
 
         # Remove the agent user
-        subprocess.call(["userdel", _LICENSE_MANAGER_USER])
+        subprocess.call(["userdel", self._LICENSE_MANAGER_USER])
 
     @property
     def fluentbit_config_lm_log(self) -> list:
