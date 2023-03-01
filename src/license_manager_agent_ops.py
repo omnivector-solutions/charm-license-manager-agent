@@ -50,8 +50,22 @@ class LicenseManagerAgentOps:
         chown(self._CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
         self._CACHE_DIR.chmod(0o770)
 
-    def install(self):
-        """Install license-manager-agent and setup ops."""
+    def setup_log_dir(self):
+        """Set up log dir."""
+        # Delete log dir if it already exists
+        if self._LOG_DIR.exists():
+            logger.debug(f"Clearing log dir {self._LOG_DIR.as_posix()}")
+            rmtree(self._LOG_DIR, ignore_errors=True)
+        else:
+            logger.debug(
+                f"Tried to clean log dir {self._LOG_DIR.as_posix()}, but it does not exist"
+            )
+
+        # Create a clean log dir
+        logger.debug(f"Creating a clean log dir {self._LOG_DIR.as_posix()}")
+        self._LOG_DIR.mkdir(parents=True)
+        chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
+        self._LOG_DIR.chmod(0o770)
 
         # Create the license-manager-agent user
         useradd_cmd = [
@@ -89,11 +103,8 @@ class LicenseManagerAgentOps:
         subprocess.call(add_to_account_cmd)
         logger.debug(f"license-manager-agent user added to account with operator admin level")
 
-        # Create log dir
-        if not self._LOG_DIR.exists():
-            self._LOG_DIR.mkdir(parents=True)
-        chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
-
+    def install(self):
+        """Install license-manager-agent and setup ops."""
         # Create the virtualenv
         create_venv_cmd = [
             self._PYTHON_BIN.as_posix(),
@@ -146,6 +157,10 @@ class LicenseManagerAgentOps:
 
         # Setup cache dir
         self.setup_cache_dir()
+
+        # Setup log dir
+        self.setup_log_dir()
+
         self.setup_systemd_service()
         # Enable the systemd timer
         self.license_manager_agent_systemctl("enable")
