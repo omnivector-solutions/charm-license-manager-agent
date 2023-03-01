@@ -120,7 +120,7 @@ class LicenseManagerAgentOps:
         logger.debug(f"license-manager-agent user added to account with operator admin level")
 
     def install(self):
-        """Install license-manager-agent and setup ops."""
+        """Install license-manager-agent and set up ops."""
         # Create the virtualenv
         create_venv_cmd = [
             self._PYTHON_BIN.as_posix(),
