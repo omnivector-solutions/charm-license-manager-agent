@@ -57,7 +57,7 @@ class LicenseManagerAgentOps:
         """Set up log dir."""
         # Delete log dir if it already exists
         if self._LOG_DIR.exists():
-            logger.debug(f"Clearing log dir {self._LOG_DIR.as_posix()}")
+            logger.debug(f"The log directory already exists. Clearing it: {self._LOG_DIR.as_posix()}")
             rmtree(self._LOG_DIR, ignore_errors=True)
         else:
             logger.debug(
