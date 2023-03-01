@@ -342,29 +342,27 @@ class LicenseManagerAgentOps:
         rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
 
         # Remove the agent user from the License Manager Slurm account
-        remove_account_cmd = [
+        remove_user_cmd = [
             "sacctmgr",
             "remove",
             "user"
-            "where",
-            "user=license-manager",
-            "account=license-manager",
+            _LICENSE_MANAGER_USER,
             "-i",
         ]
-        subprocess.call(remove_account_cmd)
+        subprocess.call(remove_user_cmd)
 
         # Remove the License Manager Slurm account
         remove_account_cmd = [
             "sacctmgr",
             "remove",
             "account",
-            "license-manager",
+            _LICENSE_MANAGER_ACCOUNT,
             "-i"
         ]
         subprocess.call(remove_account_cmd)
 
         # Remove the agent user
-        subprocess.call(["userdel", "license-manager"])
+        subprocess.call(["userdel", _LICENSE_MANAGER_USER])
 
     @property
     def fluentbit_config_lm_log(self) -> list:
