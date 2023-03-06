@@ -51,7 +51,7 @@ class LicenseManagerAgentOps:
         logger.debug(f"Creating a clean cache dir {self._CACHE_DIR.as_posix()}")
         self._CACHE_DIR.mkdir(parents=True)
         chown(self._CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
-        self._CACHE_DIR.chmod(0o770)
+        self._CACHE_DIR.chmod(0o777)
 
     def setup_log_dir(self):
         """Set up log dir."""
@@ -68,7 +68,7 @@ class LicenseManagerAgentOps:
         logger.debug(f"Creating a clean log dir {self._LOG_DIR.as_posix()}")
         self._LOG_DIR.mkdir(parents=True)
         chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
-        self._LOG_DIR.chmod(0o770)
+        self._LOG_DIR.chmod(0o777)
 
     def setup_license_manager_user(self):
         """Set up license-manager user, account and group."""
