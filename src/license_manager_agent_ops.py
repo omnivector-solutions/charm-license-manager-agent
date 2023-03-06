@@ -15,6 +15,7 @@ class LicenseManagerAgentOps:
     _PYTHON_BIN = Path("/usr/bin/python3.8")
     _PACKAGE_NAME = "license-manager-agent"
     _LOG_DIR = Path("/var/log/license-manager-agent")
+    _CACHE_DIR = Path("/var/cache/license-manager")
     _ETC_DEFAULT = Path("/etc/default/license-manager-agent")
     _SYSTEMD_BASE_PATH = Path("/usr/lib/systemd/system")
     _SYSTEMD_SERVICE_NAME = "license-manager-agent.service"
@@ -27,6 +28,9 @@ class LicenseManagerAgentOps:
     EPILOG_PATH = _VENV_DIR / "bin/slurmctld_epilog"
     _SLURM_USER = "slurm"
     _SLURM_GROUP = "slurm"
+    _LICENSE_MANAGER_USER = "license-manager"
+    _LICENSE_MANAGER_ACCOUNT = "license-manager"
+
 
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
@@ -34,42 +38,67 @@ class LicenseManagerAgentOps:
 
     def setup_cache_dir(self):
         """Set up cache dir."""
-        CACHE_DIR = Path("/var/cache/license-manager")
-
         # Delete cache dir if it already exists
-        if CACHE_DIR.exists():
-            logger.debug(f"Clearing cache dir {CACHE_DIR.as_posix()}")
-            rmtree(CACHE_DIR, ignore_errors=True)
+        if self._CACHE_DIR.exists():
+            logger.debug(f"The cache directory already exists. Clearing it: {self._CACHE_DIR.as_posix()}")
+            rmtree(self._CACHE_DIR, ignore_errors=True)
         else:
             logger.debug(
-                f"Tried to clean cache dir {CACHE_DIR.as_posix()}, but it does not exist"
+                f"Searched for the cache directory {self._CACHE_DIR.as_posix()}, but it does not exist; skipping for its creation"
             )
 
         # Create a clean cache dir
-        logger.debug(f"Creating a clean cache dir {CACHE_DIR.as_posix()}")
-        CACHE_DIR.mkdir(parents=True)
-        chown(CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
-        CACHE_DIR.chmod(0o700)
+        logger.debug(f"Creating a clean cache dir {self._CACHE_DIR.as_posix()}")
+        self._CACHE_DIR.mkdir(parents=True)
+        chown(self._CACHE_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
+        self._CACHE_DIR.chmod(0o777)
 
-    def install(self):
-        """Install license-manager-agent and setup ops."""
+    def setup_log_dir(self):
+        """Set up log dir."""
+        # Delete log dir if it already exists
+        if self._LOG_DIR.exists():
+            logger.debug(f"The log directory already exists. Clearing it: {self._LOG_DIR.as_posix()}")
+            rmtree(self._LOG_DIR, ignore_errors=True)
+        else:
+            logger.debug(
+                f"Tried to clean log dir {self._LOG_DIR.as_posix()}, but it does not exist"
+            )
 
+        # Create a clean log dir
+        logger.debug(f"Creating a clean log dir {self._LOG_DIR.as_posix()}")
+        self._LOG_DIR.mkdir(parents=True)
+        chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
+        self._LOG_DIR.chmod(0o777)
+
+    def setup_license_manager_user(self):
+        """Set up license-manager user, account and group."""
         # Create the license-manager-agent user
         useradd_cmd = [
             "adduser",
             "--system",
             "--no-create-home",
-            "license-manager",
+            self._LICENSE_MANAGER_USER,
         ]
         subprocess.call(useradd_cmd)
         logger.debug(f"license-manager-agent user created")
+
+        # Add user to slurm group
+        usermod_cmd = [
+            "usermod",
+            "-a",
+            "-G",
+            self._SLURM_GROUP,
+            self._LICENSE_MANAGER_USER,
+        ]
+        subprocess.call(usermod_cmd)
+        logger.debug(f"license-manager-agent user added to slurm group")
 
         # Create the Slurm account for License Manager
         create_account_cmd = [
             "sacctmgr",
             "add",
             "account",
-            "license-manager",
+            self._LICENSE_MANAGER_ACCOUNT,
             "Description=License Manager reservations account",
             "-i",
         ]
@@ -82,19 +111,16 @@ class LicenseManagerAgentOps:
             "sacctmgr",
             "add",
             "user",
-            "license-manager",
-            f"Account=license-manager",
+            self._LICENSE_MANAGER_USER,
+            f"Account={self._LICENSE_MANAGER_ACCOUNT}",
             "AdminLevel=Operator",
             "-i",
         ]
         subprocess.call(add_to_account_cmd)
         logger.debug(f"license-manager-agent user added to account with operator admin level")
 
-        # Create log dir
-        if not self._LOG_DIR.exists():
-            self._LOG_DIR.mkdir(parents=True)
-        chown(self._LOG_DIR.as_posix(), self._SLURM_USER, self._SLURM_GROUP)
-
+    def install(self):
+        """Install license-manager-agent and set up ops."""
         # Create the virtualenv
         create_venv_cmd = [
             self._PYTHON_BIN.as_posix(),
@@ -147,7 +173,16 @@ class LicenseManagerAgentOps:
 
         # Setup cache dir
         self.setup_cache_dir()
+
+        # Setup log dir
+        self.setup_log_dir()
+
+        # Setup license-manager user
+        self.setup_license_manager_user()
+
+        # Setup systemd service and timer
         self.setup_systemd_service()
+
         # Enable the systemd timer
         self.license_manager_agent_systemctl("enable")
 
@@ -307,29 +342,27 @@ class LicenseManagerAgentOps:
         rmtree(self._VENV_DIR.as_posix(), ignore_errors=True)
 
         # Remove the agent user from the License Manager Slurm account
-        remove_account_cmd = [
+        remove_user_cmd = [
             "sacctmgr",
             "remove",
-            "user"
-            "where",
-            "user=license-manager",
-            "account=license-manager",
+            "user",
+            self._LICENSE_MANAGER_USER,
             "-i",
         ]
-        subprocess.call(remove_account_cmd)
+        subprocess.call(remove_user_cmd)
 
         # Remove the License Manager Slurm account
         remove_account_cmd = [
             "sacctmgr",
             "remove",
             "account",
-            "license-manager",
+            self._LICENSE_MANAGER_ACCOUNT,
             "-i"
         ]
         subprocess.call(remove_account_cmd)
 
         # Remove the agent user
-        subprocess.call(["userdel", "license-manager"])
+        subprocess.call(["userdel", self._LICENSE_MANAGER_USER])
 
     @property
     def fluentbit_config_lm_log(self) -> list:

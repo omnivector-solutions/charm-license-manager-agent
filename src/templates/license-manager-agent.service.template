@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=oneshot
-User=root
-Group=root
+User=license-manager
+Group=slurm
 WorkingDirectory=/srv/license-manager-agent-venv
 EnvironmentFile=-/etc/default/license-manager-agent
 ExecStart=/srv/license-manager-agent-venv/bin/reconcile
