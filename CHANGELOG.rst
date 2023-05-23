@@ -6,6 +6,13 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
+
+1.1.1 - 2023-05-23
+------------------
+* Set ops to version 1.3.0
+
+1.1.0 - 2023-03-07
+------------------
 * Add support to use Slurm reservations by setting an user and account
 
 1.0.0 - 2022-12-15
