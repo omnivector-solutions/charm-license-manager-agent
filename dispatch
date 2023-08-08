@@ -31,8 +31,8 @@ then
             # Install python3.8 from source.
             if [ ! -e /usr/bin/python3.8 ]
             then
-		yum install -y gcc zlib-devel bzip2 bzip2-devel readline-devel \
-			sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel wget
+		        yum install -y gcc zlib-devel bzip2 bzip2-devel readline-devel \
+			    sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel wget
                 yum groupinstall "Development tools" -y
                 /bin/bash ./src/templates/install_python.sh
             fi
@@ -40,16 +40,17 @@ then
             echo "Running unsuppored version of centos: $major"
             exit -1
         fi
-    else
+    elif [ $ID = 'ubuntu' ]
+    then
         # We are running an ubuntu os, so check for python and install the
         # needed venv package or python3 from source, depending on what already
         # exists on the system.
         #
         if [ ! -e /usr/bin/python3.8 ]
         then
-	    apt install -y make build-essential libssl-dev zlib1g-dev \
-	    libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-	    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+            apt install -y make build-essential libssl-dev zlib1g-dev \
+            libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+            libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
             /bin/bash ./src/templates/install_python.sh
         else
