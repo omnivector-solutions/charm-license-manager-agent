@@ -31,7 +31,6 @@ class LicenseManagerAgentOps:
     _LICENSE_MANAGER_USER = "license-manager"
     _LICENSE_MANAGER_ACCOUNT = "license-manager"
 
-
     def __init__(self, charm):
         """Initialize license-manager-agent-ops."""
         self._charm = charm
@@ -40,11 +39,14 @@ class LicenseManagerAgentOps:
         """Set up cache dir."""
         # Delete cache dir if it already exists
         if self._CACHE_DIR.exists():
-            logger.debug(f"The cache directory already exists. Clearing it: {self._CACHE_DIR.as_posix()}")
+            logger.debug(
+                f"The cache directory already exists. Clearing it: {self._CACHE_DIR.as_posix()}"
+            )
             rmtree(self._CACHE_DIR, ignore_errors=True)
         else:
             logger.debug(
-                f"Searched for the cache directory {self._CACHE_DIR.as_posix()}, but it does not exist; skipping for its creation"
+                f"Searched for the cache directory {self._CACHE_DIR.as_posix()}, \
+                but it does not exist; skipping for its creation"
             )
 
         # Create a clean cache dir
@@ -57,7 +59,9 @@ class LicenseManagerAgentOps:
         """Set up log dir."""
         # Delete log dir if it already exists
         if self._LOG_DIR.exists():
-            logger.debug(f"The log directory already exists. Clearing it: {self._LOG_DIR.as_posix()}")
+            logger.debug(
+                f"The log directory already exists. Clearing it: {self._LOG_DIR.as_posix()}"
+            )
             rmtree(self._LOG_DIR, ignore_errors=True)
         else:
             logger.debug(
@@ -80,7 +84,7 @@ class LicenseManagerAgentOps:
             self._LICENSE_MANAGER_USER,
         ]
         subprocess.call(useradd_cmd)
-        logger.debug(f"license-manager-agent user created")
+        logger.debug("license-manager-agent user created")
 
         # Add user to slurm group
         usermod_cmd = [
@@ -91,7 +95,7 @@ class LicenseManagerAgentOps:
             self._LICENSE_MANAGER_USER,
         ]
         subprocess.call(usermod_cmd)
-        logger.debug(f"license-manager-agent user added to slurm group")
+        logger.debug("license-manager-agent user added to slurm group")
 
         # Create the Slurm account for License Manager
         create_account_cmd = [
@@ -103,8 +107,8 @@ class LicenseManagerAgentOps:
             "-i",
         ]
         subprocess.call(create_account_cmd)
-        logger.debug(f"license-manager-agent account created")
-        
+        logger.debug("license-manager-agent account created")
+
         # Add license-manager-agent user to License Manager account
         # Operator level ensures they can create reservations
         add_to_account_cmd = [
@@ -117,7 +121,7 @@ class LicenseManagerAgentOps:
             "-i",
         ]
         subprocess.call(add_to_account_cmd)
-        logger.debug(f"license-manager-agent user added to account with operator admin level")
+        logger.debug("license-manager-agent user added to account with operator admin level")
 
     def install(self):
         """Install license-manager-agent and set up ops."""
@@ -137,7 +141,7 @@ class LicenseManagerAgentOps:
             "-m",
             "ensurepip",
         ]
-        subprocess.call(ensure_pip_cmd)
+        subprocess.check_output(ensure_pip_cmd, env={})
         logger.debug("pip ensured")
 
         # Ensure we have the latest pip
