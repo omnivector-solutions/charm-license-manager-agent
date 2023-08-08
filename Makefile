@@ -19,4 +19,4 @@ clean: ## Remove build dirs, temp files, and charms
 .PHONY: charm
 charm: version ## Pack the charm
 	@charmcraft pack
-	@cp license-manager-agent_*.charm license-manager-agent.charm
+	@mv license-manager-agent_*.charm license-manager-agent.charm
