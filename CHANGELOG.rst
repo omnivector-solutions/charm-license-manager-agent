@@ -6,6 +6,9 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
+
+1.1.2 - 2023-08-08
+------------------
 * Add support for Rocky Linux and Ubuntu Jammy
 
 1.1.1 - 2023-05-23
