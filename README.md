@@ -8,7 +8,7 @@ Follow the steps below to get started.
 ### Build the charm
 
 Running the following command will produce a `.charm` file,
-`license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm`:
+`license-manager-agent.charm`:
 ```bash
 $ make charm
 ```
@@ -50,7 +50,7 @@ Using the built charm and the defined config, run the following command to
 deploy the charm:
 
 ```bash
-$ juju deploy ./license-manager-agent_ubuntu-20.04-amd64_centos-7-amd64.charm \
+$ juju deploy ./license-manager-agent.charm \
               --config ./license-manager-agent.yaml \
               --series centos7
 $ juju relate license-manager-agent:juju-info slurmctld
