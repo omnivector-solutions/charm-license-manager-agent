@@ -1,66 +1,47 @@
 #!/bin/bash
-# This hook installs the centos dependencies needed to run the charm.
+# This hook installs the dependencies needed to run the charm,
+# creates the dispatch executable, regenerates the symlinks for start and
+# upgrade-charm, and kicks off the operator framework.
 
 set -e
 
-# Source the os-release information into the env.
+# Source the os-release information into the env
 . /etc/os-release
 
+PYTHON_BIN=/opt/python/python3.12/bin/python3.12
 
-if [ ! -f '.installed' ]
+if ! [[ -f '.installed' ]]
 then
-    # Determine if we are running in centos or ubuntu, if centos
-    # provision the needed prereqs.
-    if [ $ID = 'centos' ]
+    if [[ ! -e $PYTHON_BIN ]]
     then
-        # Determine the centos version and install prereqs accordingly
-        major=$(cat /etc/centos-release | tr -dc '0-9.'| cut -d \. -f1)
-        if [ $major = "7" ]
+        if [[ $ID == 'centos' || $ID == 'rocky' ]]
         then
-            # Install yaml deps
-            yum -y install libyaml-devel
-            # Install python3 using yum (will install python3.6 on centos7)
-            if [ ! -e /usr/bin/python3 ]
-            then
-                echo "Running centos$major, installing prereqs."
-                # Install system python3
-                yum -y install epel-release
-                yum -y install python3
-            fi
-            # We need python3.8 to run license-manager-agent.
-            # Install python3.8 from source.
-            if [ ! -e /usr/bin/python3.8 ]
-            then
-		        yum install -y gcc zlib-devel bzip2 bzip2-devel readline-devel \
-			    sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel wget
-                yum groupinstall "Development tools" -y
-                /bin/bash ./src/templates/install_python.sh
-            fi
-        else
-            echo "Running unsuppored version of centos: $major"
-            exit -1
-        fi
-    elif [ $ID = 'ubuntu' ]
-    then
-        # We are running an ubuntu os, so check for python and install the
-        # needed venv package or python3 from source, depending on what already
-        # exists on the system.
-        #
-        if [ ! -e /usr/bin/python3.8 ]
-        then
-            apt install -y make build-essential libssl-dev zlib1g-dev \
-            libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-            libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+            # Install dependencies to build custom python
+            yum -y install epel-release
+            yum -y install wget gcc make tar bzip2-devel zlib-devel xz-devel openssl-devel libffi-devel sqlite-devel ncurses-devel openssl11-libs openssl11-devel tk-devel libreadline-devel libgdbm-devel
 
-            /bin/bash ./src/templates/install_python.sh
-        else
-            if [ ! -e /usr/bin/pip3 ]
-            then
-                apt install -y python3.8-venv
-            fi
+            # Install yaml deps
+            yum -y install libyaml-devel            
         fi
+
+        if [[ $ID == 'ubuntu' ]]
+        then
+             # Install dependencies to build custom python
+            apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+        fi
+
+        export PYTHON_VERSION=3.12.1
+        wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz -P /tmp
+        tar xvf /tmp/Python-${PYTHON_VERSION}.tar.xz -C /tmp
+        cd /tmp/Python-${PYTHON_VERSION}
+        export CFLAGS="$CFLAGS $(pkg-config --cflags openssl11)"
+		export LDFLAGS="$LDFLAGS $(pkg-config --libs openssl11)"
+        ./configure --prefix=/opt/python/python3.12 --enable-optimizations
+        make -C /tmp/Python-${PYTHON_VERSION} -j $(nproc) altinstall
+        cd $OLDPWD
+        rm -rf /tmp/Python*
     fi
-    touch .installed
+	touch .installed
 fi
 
-JUJU_DISPATCH_PATH="${JUJU_DISPATCH_PATH:-$0}" PYTHONPATH=lib:venv ./src/charm.py
+JUJU_DISPATCH_PATH="${JUJU_DISPATCH_PATH:-$0}" PYTHONPATH=lib:venv $PYTHON_BIN ./src/charm.py
