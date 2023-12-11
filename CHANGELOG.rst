@@ -6,6 +6,8 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
+- Drop support for CentOS 8
+- Installed Python 3.12 to run the agent
 
 1.1.2 - 2023-08-08
 ------------------
