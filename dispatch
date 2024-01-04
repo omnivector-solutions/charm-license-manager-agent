@@ -35,7 +35,7 @@ then
         tar xvf /tmp/Python-${PYTHON_VERSION}.tar.xz -C /tmp
         cd /tmp/Python-${PYTHON_VERSION}
         export CFLAGS="$CFLAGS $(pkg-config --cflags openssl11)"
-		export LDFLAGS="$LDFLAGS $(pkg-config --libs openssl11)"
+	export LDFLAGS="$LDFLAGS $(pkg-config --libs openssl11)"
         ./configure --prefix=/opt/python/python3.12 --enable-optimizations
         make -C /tmp/Python-${PYTHON_VERSION} -j $(nproc) altinstall
         cd $OLDPWD
