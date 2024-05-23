@@ -276,6 +276,7 @@ class LicenseManagerAgentOps:
             "use-reconcile-in-prolog-epilog"
         )
         deploy_env = charm_config.get("deploy-env")
+        stat_interval = charm_config.get("stat-interval")
 
         log_base_dir = str(self._LOG_DIR)
 
@@ -295,6 +296,7 @@ class LicenseManagerAgentOps:
             "oidc_client_secret": oidc_client_secret,
             "use_reconcile_in_prolog_epilog": use_reconcile_in_prolog_epilog,
             "deploy_env": deploy_env,
+            "stat_interval": stat_interval,
         }
 
         template_dir = Path("./src/templates/")
