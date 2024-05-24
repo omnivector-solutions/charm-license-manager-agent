@@ -24,3 +24,4 @@ LM2_AGENT_OIDC_CLIENT_ID={{ oidc_client_id }}
 LM2_AGENT_OIDC_CLIENT_SECRET={{ oidc_client_secret }}
 LM2_AGENT_CACHE_DIR=/var/cache/license-manager
 LM2_AGENT_DEPLOY_ENV={{ deploy_env }}
+LM2_AGENT_STAT_INTERVAL={{ stat_interval }}
