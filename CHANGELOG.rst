@@ -7,6 +7,7 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 Unreleased
 ----------
 - Include stat interval env var in the agent's configuration
+- Update service to include locale env vars
 
 1.1.3 - 2023-12-11
 ------------------
