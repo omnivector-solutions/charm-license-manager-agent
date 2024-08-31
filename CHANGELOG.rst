@@ -6,16 +6,17 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
+* Update the charm to support installing the new License Manager Agent process [ASP-5383]
 
 1.1.4 - 2023-16-24
 ------------------
-- Include stat interval env var in the agent's configuration
-- Update service to include locale env vars
+* Include stat interval env var in the agent's configuration
+* Update service to include locale env vars
 
 1.1.3 - 2023-12-11
 ------------------
-- Drop support for CentOS 8
-- Installed Python 3.12 to run the agent
+* Drop support for CentOS 8
+* Installed Python 3.12 to run the agent
 
 1.1.2 - 2023-08-08
 ------------------

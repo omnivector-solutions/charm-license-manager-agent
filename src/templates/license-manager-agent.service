@@ -3,13 +3,12 @@ Description=license-manager-agent
 After=network.target
 
 [Service]
-Type=oneshot
+Type=simple
 User=license-manager
 Group=slurm
 WorkingDirectory=/srv/license-manager-agent-venv
 EnvironmentFile=-/etc/default/license-manager-agent
-ExecStart=/srv/license-manager-agent-venv/bin/reconcile
-TimeoutStartSec={{ timeout_interval }}
+ExecStart=/srv/license-manager-agent-venv/bin/license-manager-agent
 Environment="LANG=en_US.UTF-8"
 Environment="LC_ALL=C"
 
