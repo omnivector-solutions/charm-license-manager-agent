@@ -14,11 +14,11 @@ if ! [[ -f '.installed' ]]
 then
     if [[ ! -e $PYTHON_BIN ]]
     then
-        if [[ $ID == 'centos' || $ID == 'rocky' ]]
+        if [[ $ID == 'rocky' ]]
         then
             # Install dependencies to build custom python
             yum -y install epel-release
-            yum -y install wget gcc make tar bzip2-devel zlib-devel xz-devel openssl-devel libffi-devel sqlite-devel ncurses-devel openssl11-libs openssl11-devel tk-devel libreadline-devel libgdbm-devel
+            yum -y install wget gcc make tar bzip2-devel zlib-devel xz-devel openssl-devel libffi-devel sqlite-devel ncurses-devel xz-devel gdbm tk-devel readline-devel sqlite-devel libnsl2-devel
 
             # Install yaml deps
             yum -y install libyaml-devel            
@@ -34,8 +34,6 @@ then
         wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz -P /tmp
         tar xvf /tmp/Python-${PYTHON_VERSION}.tar.xz -C /tmp
         cd /tmp/Python-${PYTHON_VERSION}
-        export CFLAGS="$CFLAGS $(pkg-config --cflags openssl11)"
-	export LDFLAGS="$LDFLAGS $(pkg-config --libs openssl11)"
         ./configure --prefix=/opt/python/python3.12 --enable-optimizations
         make -C /tmp/Python-${PYTHON_VERSION} -j $(nproc) altinstall
         cd $OLDPWD

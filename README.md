@@ -30,18 +30,18 @@ Create a text file `license-manager-agent.yaml` with this content:
 
 ```yaml
 license-manager-agent:
-  log-level: DEBUG
+  backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
   stat-interval: 60
-  license-manager-backend-base-url: "http://<url-pointing-to-the-license-manager-backend>"
-  lmutil-path: "/usr/local/bin/lmutil"
-  rlmutil-path: "/usr/local/bin/rlmutil"
-  lsdyna-path: "/usr/local/bin/lstc_qrun"
-  lmxendutil-path: "/usr/local/bin/lmxendutil"
+  lmutil-path: "<path-to-lmutil>"
+  rlmutil-path: "<path-to-rlmutil>"
+  lsdyna-path: "<path-to-lstc_qrun>"
+  lmxendutil-path: "<path-to-lmxendutil>"
+  olixtool-path: "<path-to-olixtool>"
   oidc-domain: "<domain-collected-from-oidc>"
-  oidc-audience: "<audience-for-oidc-api>"
   oidc-client-id: "<client-id-for-oidc-app>"
   oidc-client-secret: "<client-secret-for-oidc-app>"
-  deploy-env: "STAGING" # can be LOCAL or PROD as well
+  log-level: "DEBUG"
+  deploy-env: "LOCAL" # can be STAGING or PROD as well
 ```
 
 ### Deploy the charm
@@ -75,7 +75,7 @@ $ git push --tags
 
 To modify the charm configuration after it was deployed, use the `juju config` command. For example:
 ```bash
-juju config license-manager-agent license-manager-backend-base-url=somenewvalue
+juju config license-manager-agent backend-base-url=somenewvalue
 ```
 
 If you wish to prevent Prolog/Epilog scripts from triggering a forced reconciliation, run:

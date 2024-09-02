@@ -81,24 +81,20 @@ class LicenseManagerAgentCharm(CharmBase):
     def _on_start(self, event):
         """Start the license-manager-agent service."""
         if self._stored.installed:
-            self._license_manager_agent_ops.license_manager_agent_systemctl("start")
+            self._license_manager_agent_ops.start_agent()
             self.unit.status = ActiveStatus("license-manager-agent started")
             self._stored.init_started = True
 
     def _on_config_changed(self, event):
         """Configure license-manager-agent with charm config."""
-        # Write out the /etc/default/license-manage-agent config
         self._license_manager_agent_ops.configure_etc_default()
-        self._license_manager_agent_ops.setup_systemd_service()
 
-        # Make sure the start hook has ran before we are restarting the service
         if self._stored.init_started:
-            self._license_manager_agent_ops.restart_license_manager_agent()
+            self._license_manager_agent_ops.restart_agent()
 
     def _on_remove(self, event):
         """Remove directories and files created by license-manager-agent charm."""
-        self._license_manager_agent_ops.license_manager_agent_systemctl("stop")
-        self._license_manager_agent_ops.remove_license_manager_agent()
+        self._license_manager_agent_ops.remove_agent()
 
     def _on_upgrade_action(self, event):
         version = event.params["version"]
@@ -106,7 +102,7 @@ class LicenseManagerAgentCharm(CharmBase):
             self._license_manager_agent_ops.upgrade(version)
             event.set_results({"upgrade": "success"})
             self.unit.status = ActiveStatus(f"Updated to version {version}")
-            self._license_manager_agent_ops.restart_license_manager_agent()
+            self._license_manager_agent_ops.restart_agent()
         except Exception:
             self.unit.status = BlockedStatus(f"Error updating to version {version}")
             event.fail()
@@ -120,12 +116,12 @@ class LicenseManagerAgentCharm(CharmBase):
     @property
     def prolog_path(self) -> str:
         """Return the path to the prolog script."""
-        return self._license_manager_agent_ops.PROLOG_PATH.as_posix()
+        return self._license_manager_agent_ops._PROLOG_PATH.as_posix()
 
     @property
     def epilog_path(self) -> str:
         """Return the path to the epilog script."""
-        return self._license_manager_agent_ops.EPILOG_PATH.as_posix()
+        return self._license_manager_agent_ops._EPILOG_PATH.as_posix()
 
 
 if __name__ == "__main__":

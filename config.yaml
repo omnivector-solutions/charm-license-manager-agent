@@ -1,29 +1,34 @@
 options:
-  license-manager-backend-base-url:
+  # Resource URL
+  backend-base-url:
     type: string
     default:
     description: |
-      The license-manager backend url.
-  log-level:
+      The License Manager API URL
+
+  # Slurm related setings
+  scontrol-path:
     type: string
-    default: INFO
+    default: "/usr/bin/scontrol"
     description: |
-      Acceptable values; DEBUG, INFO, ERROR, WARNING, CRITICAL.
+      Absolute path to the scontrol command
+  sacctmgr-path:
+    type: string
+    default: "/usr/bin/sacctmgr"
+    description: |
+      Absolute path to the sacctmgr command
+  squeue-path:
+    type: string
+    default: "/usr/bin/squeue"
+    description: |
+      Absolute path to the squeue command
+
+  # License Manager Agent settings
   stat-interval:
     type: int
     default: 300
     description: |
-      Interval (in seconds) at which the reconcile cron will run.
-  timeout-interval:
-    type: int
-    default: 30
-    description: |
-      Interval (in seconds) at which the agent service will be killed if not finished.
-  sentry-dsn:
-    type: string
-    default: ""
-    description: |
-      Sentry DSN url.
+      Interval (in seconds) at which the reconciliation process should run
   lmutil-path:
     type: string
     default:
@@ -54,26 +59,41 @@ options:
     default: True
     description: |
       Flags if reconciliation should be triggered when running Prolog/Epilog scripts. Defaults to true.
+
+  # Auth related settings
   oidc-domain:
     type: string
     default:
     description: |
-      Domain for the OIDC provider API where auth tokens will be fetched.
-  oidc-audience:
-    type: string
-    default:
-    description: |
-      Audience for the OIDC provider issued tokens.
+      Domain for the OIDC provider API where auth tokens will be fetched
   oidc-client-id:
     type: string
     default:
     description: |
-      The ID for the OIDC provider app client to which tokens will be issued.
+      The ID for the OIDC provider app client to which tokens will be issued
   oidc-client-secret:
     type: string
     default:
     description: |
-      The secret key for the OIDC provider app client to which tokens will be issued.
+      The secret key for the OIDC provider app client to which tokens will be issued
+
+
+  # Other settings
+  sentry-dsn:
+    type: string
+    default: ""
+    description: |
+      Sentry DSN url.
+  cache-dir:
+    type: string
+    default: "/var/cache/license-manager"
+    description: |
+      Absolute path to the cache directory
+  log-level:
+    type: string
+    default: INFO
+    description: |
+      Acceptable values; DEBUG, INFO, ERROR, WARNING, CRITICAL.
   deploy-env:
     type: string
     default: STAGING
