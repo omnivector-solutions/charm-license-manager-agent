@@ -7,6 +7,7 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 Unreleased
 ----------
 * Update the charm to support installing the new License Manager Agent process [ASP-5383]
+* Remove support for CentOS7
 
 1.1.4 - 2023-16-24
 ------------------
