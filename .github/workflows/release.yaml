@@ -36,19 +36,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Select charmhub channel
-        uses: canonical/charming-actions/channel@2.5.0-rc
-        id: channel
-        with:
-          channel: ${{ github.event.inputs.channel }}
-
-      - name: Install dependencies
+      - name: Install Charmcraft
         run: |
-            snap install charmcraft --channel 3.x/stable
+          sudo snap install charmcraft --channel 3.x/stable --classic
 
-      - name: Upload charm to charmhub
-        uses: canonical/charming-actions/upload-charm@2.5.0-rc
-        with:
-          credentials: "${{ secrets.CHARMCRAFT_AUTH }}"
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          channel: "${{ github.event.inputs.channel }}"
+      - name: Build bundle
+        run: |
+          charmcraft pack
+          mv license-manager-agent_*.charm license-manager-agent.charm
+
+      - name: Create bundle revision
+        run: |
+          charmcraft upload --name=license-manager-agent --release=${{ github.event.inputs.channel }} license-manager-agent.charm
+        env:
+          CHARMCRAFT_AUTH: ${{ secrets.CHARMCRAFT_AUTH }}
