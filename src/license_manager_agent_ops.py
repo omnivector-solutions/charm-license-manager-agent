@@ -207,7 +207,7 @@ class LicenseManagerAgentOps:
             self._PIP_CMD,
             "install",
             "--upgrade",
-            f"self._PACKAGE_NAME=={version}",
+            f"{self._PACKAGE_NAME}=={version}",
         ]
         logger.debug(f"## Upgrading license-manager-agent: {cmd}")
         try:
