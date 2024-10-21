@@ -8,6 +8,7 @@ Unreleased
 ----------
 * Update the charm to support installing the new License Manager Agent process [ASP-5383]
 * Remove support for CentOS7
+* Add support to DSLS license server [ASP-5000]
 
 1.1.4 - 2023-16-24
 ------------------
