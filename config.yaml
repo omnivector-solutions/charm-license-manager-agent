@@ -54,6 +54,11 @@ options:
     default:
     description: |
       Path to the OLicense binary. Leave blank if not needed.
+  dslicsrv-path:
+    type: string
+    default:
+    description: |
+      Path to the DSLicSrv binary. Leave blank if not needed.
   use-reconcile-in-prolog-epilog:
     type: boolean
     default: True

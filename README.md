@@ -37,6 +37,7 @@ license-manager-agent:
   lsdyna-path: "<path-to-lstc_qrun>"
   lmxendutil-path: "<path-to-lmxendutil>"
   olixtool-path: "<path-to-olixtool>"
+  dslicsrv-path: "<path-to-dslicsrv>"
   oidc-domain: "<domain-collected-from-oidc>"
   oidc-client-id: "<client-id-for-oidc-app>"
   oidc-client-secret: "<client-secret-for-oidc-app>"
@@ -52,7 +53,7 @@ deploy the charm:
 ```bash
 $ juju deploy ./license-manager-agent.charm \
               --config ./license-manager-agent.yaml \
-              --series centos7
+              --series jammy
 $ juju relate license-manager-agent:juju-info slurmctld
 $ juju relate license-manager-agent:prolog-epilog slurmctld
 ```
