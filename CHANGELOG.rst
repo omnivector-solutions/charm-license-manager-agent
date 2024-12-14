@@ -6,9 +6,17 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
-* Update the charm to support installing the new License Manager Agent process [ASP-5383]
-* Remove support for CentOS7
+* Include `TOOL_TIMEOUT` env var in the agent's configuration [ASP-5422]
+
+1.2.1 - 2024-09-02
+-------------------
 * Add support to DSLS license server [ASP-5000]
+* Fix bug on upgrade action [ASP-5000]
+
+1.2.0 - 2024-09-02
+-------------------
+* Remove support for CentOS7
+* Update the charm to support installing the new License Manager Agent process [ASP-5383]
 
 1.1.4 - 2023-16-24
 ------------------
