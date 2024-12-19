@@ -29,6 +29,11 @@ options:
     default: 300
     description: |
       Interval (in seconds) at which the reconciliation process should run
+  tool-timeout:
+    type: int
+    default: 6
+    description: |
+      Timeout (in seconds) for the binaries command to run without raising an error
   lmutil-path:
     type: string
     default:
