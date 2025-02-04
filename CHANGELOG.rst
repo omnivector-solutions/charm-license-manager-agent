@@ -6,6 +6,10 @@ This file keeps track of all notable changes to the License Manager Agent Charm.
 
 Unreleased
 ----------
+
+
+1.2.2 - 2025-02-04
+-------------------
 * Include `TOOL_TIMEOUT` env var in the agent's configuration [ASP-5422]
 
 1.2.1 - 2024-09-02
